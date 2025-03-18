@@ -72,6 +72,11 @@ const LoginPage: React.FC = () => {
           <CardDescription className="text-center">
             Enter your credentials to sign in
           </CardDescription>
+          <div className="mt-2 p-2 bg-yellow-100 border border-yellow-300 rounded-md text-sm text-yellow-800">
+            <p className="font-medium">Demo Credentials:</p>
+            <p>Email: admin@university.edu</p>
+            <p>Password: password123</p>
+          </div>
         </CardHeader>
         <CardContent>
           <Form {...form}>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { ShieldAlert } from "lucide-react";
 import {
   Dialog,
@@ -27,6 +27,14 @@ const AdminAuthDialog: React.FC<AdminAuthDialogProps> = ({
 }) => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+
+  // Reset password and error when dialog opens
+  useEffect(() => {
+    if (open) {
+      setPassword("");
+      setError("");
+    }
+  }, [open]);
 
   const handleAuthenticate = () => {
     // In a real app, this would be a secure authentication process
@@ -67,6 +75,7 @@ const AdminAuthDialog: React.FC<AdminAuthDialogProps> = ({
                   handleAuthenticate();
                 }
               }}
+              autoFocus
             />
             {error && <p className="text-sm text-red-500">{error}</p>}
             <p className="text-xs text-muted-foreground mt-2">

@@ -19,59 +19,63 @@ const GetStartedPage = lazy(() => import("./components/auth/GetStartedPage"));
 function App() {
   return (
     <AuthProvider>
-      <Suspense fallback={<p>Loading...</p>}>
-        <>
-          <Routes>
-            <Route path="/" element={<GetStartedPage />} />
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/register" element={<RegisterPage />} />
-            <Route
-              path="/dashboard"
-              element={
-                <ProtectedRoute>
-                  <Home />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/employees"
-              element={
-                <ProtectedRoute>
-                  <EmployeesPage />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/payroll"
-              element={
-                <ProtectedRoute>
-                  <PayrollPage />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/reports"
-              element={
-                <ProtectedRoute>
-                  <ReportsPage />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/settings"
-              element={
-                <ProtectedRoute>
-                  <SettingsPage />
-                </ProtectedRoute>
-              }
-            />
-            {/* Add the tempo route before any catch-all route */}
-            {import.meta.env.VITE_TEMPO === "true" && (
-              <Route path="/tempobook/*" />
-            )}
-          </Routes>
-          {import.meta.env.VITE_TEMPO === "true" && useRoutes(routes)}
-        </>
+      <Suspense
+        fallback={
+          <div className="flex items-center justify-center h-screen">
+            Loading...
+          </div>
+        }
+      >
+        {import.meta.env.VITE_TEMPO === "true" && useRoutes(routes)}
+        <Routes>
+          <Route path="/" element={<GetStartedPage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
+          <Route
+            path="/dashboard"
+            element={
+              <ProtectedRoute>
+                <Home />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/employees"
+            element={
+              <ProtectedRoute>
+                <EmployeesPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/payroll"
+            element={
+              <ProtectedRoute>
+                <PayrollPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/reports"
+            element={
+              <ProtectedRoute>
+                <ReportsPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/settings"
+            element={
+              <ProtectedRoute>
+                <SettingsPage />
+              </ProtectedRoute>
+            }
+          />
+          {/* Add the tempo route before any catch-all route */}
+          {import.meta.env.VITE_TEMPO === "true" && (
+            <Route path="/tempobook/*" />
+          )}
+        </Routes>
       </Suspense>
     </AuthProvider>
   );
