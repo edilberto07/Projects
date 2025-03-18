@@ -63,7 +63,7 @@ const Sidebar = () => {
   ];
 
   return (
-    <div className="w-[280px] h-full bg-white border-r border-gray-200 flex flex-col">
+    <div className="w-[220px] h-full bg-white border-r border-gray-200 flex flex-col">
       <div className="p-6">
         <h1 className="text-xl font-bold text-primary">Campus Admin</h1>
         <p className="text-sm text-gray-500">Payroll Portal</p>

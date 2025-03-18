@@ -19,6 +19,11 @@ const NetPayCalculator: React.FC<NetPayCalculatorProps> = ({
 }) => {
   // Convert annual salary to monthly for display
   const [grossSalary, setGrossSalary] = useState(initialSalary);
+
+  // Update grossSalary when initialSalary changes
+  useEffect(() => {
+    setGrossSalary(initialSalary);
+  }, [initialSalary]);
   const [taxRate, setTaxRate] = useState(20); // Default tax rate 20%
   const [sssContribution, setSssContribution] = useState(1375); // Default SSS contribution
   const [philHealthContribution, setPhilHealthContribution] = useState(900); // Default PhilHealth
