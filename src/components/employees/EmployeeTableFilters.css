@@ -1,0 +1,77 @@
+/* Employee Table Filters Styles */
+.filters-container {
+  padding: 1rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.search-container {
+  position: relative;
+  margin-bottom: 0.75rem;
+}
+
+.search-icon {
+  position: absolute;
+  left: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #9ca3af;
+  pointer-events: none;
+}
+
+.search-input {
+  width: 100%;
+  padding-left: 2.5rem;
+}
+
+.filters-row {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.filter-item {
+  flex: 1;
+  min-width: 120px;
+}
+
+.filter-button {
+  width: 100%;
+  justify-content: space-between;
+  font-weight: normal;
+}
+
+.filter-button-content {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.filter-dropdown {
+  min-width: 200px;
+}
+
+.filter-dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.filter-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  background-color: #f3f4f6;
+  color: #4b5563;
+}
+
+.filter-badge-clear {
+  cursor: pointer;
+  opacity: 0.7;
+}
+
+.filter-badge-clear:hover {
+  opacity: 1;
+}

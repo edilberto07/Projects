@@ -312,9 +312,50 @@ const NewPayrollPage: React.FC = () => {
 
   // Navigate to next employee
   const handleNextEmployee = () => {
-    if (currentIndex < mockEmployees.length - 1) {
-      handleSelectEmployee(mockEmployees[currentIndex + 1]);
+    // First save the current payroll if it exists
+    if (currentPayroll && selectedEmployee) {
+      // Update the payroll with the latest calculated net pay
+      const updatedPayroll = {
+        ...currentPayroll,
+        netPay: calculatedNetPay,
+        status: "processed" as const,
+      };
+
+      // Update payroll history
+      setPayrollHistory((prev) => {
+        const index = prev.findIndex(
+          (record) => record.id === updatedPayroll.id,
+        );
+        if (index >= 0) {
+          // Update existing record
+          const updated = [...prev];
+          updated[index] = updatedPayroll;
+          return updated;
+        } else {
+          // Add new record
+          return [...prev, updatedPayroll];
+        }
+      });
+
+      // Show a brief confirmation message
+      const confirmationMessage = document.createElement("div");
+      confirmationMessage.textContent = `Saved payroll for ${selectedEmployee.firstName} ${selectedEmployee.lastName}`;
+      confirmationMessage.className =
+        "fixed top-4 right-4 bg-green-100 text-green-800 p-3 rounded-md shadow-md z-50";
+      document.body.appendChild(confirmationMessage);
+
+      // Remove the message after 2 seconds
+      setTimeout(() => {
+        document.body.removeChild(confirmationMessage);
+      }, 2000);
     }
+
+    // Then move to the next employee after a short delay
+    setTimeout(() => {
+      if (currentIndex < mockEmployees.length - 1) {
+        handleSelectEmployee(mockEmployees[currentIndex + 1]);
+      }
+    }, 300);
   };
 
   // Handle field change with authentication
@@ -703,6 +744,7 @@ const NewPayrollPage: React.FC = () => {
                         variant="outline"
                         className="flex items-center gap-2"
                         onClick={handleNextEmployee}
+                        disabled={!selectedEmployee}
                       >
                         Save & Next <ChevronRight className="h-4 w-4" />
                       </Button>

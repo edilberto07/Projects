@@ -1,0 +1,44 @@
+/* Admin Auth Dialog Styles */
+.auth-dialog-content {
+  max-width: 400px;
+  padding: 1.5rem;
+}
+
+.auth-dialog-header {
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.auth-dialog-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.auth-dialog-description {
+  color: #6b7280;
+  margin-top: 0.5rem;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.auth-form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.auth-form-label {
+  font-weight: 500;
+  font-size: 0.875rem;
+}
+
+.auth-form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}

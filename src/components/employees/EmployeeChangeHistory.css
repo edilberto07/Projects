@@ -1,0 +1,88 @@
+/* Employee Change History Styles */
+.history-container {
+  margin-top: 2rem;
+  border-top: 1px solid #e5e7eb;
+  padding-top: 1.5rem;
+}
+
+.history-header {
+  font-size: 1.125rem;
+  font-weight: 500;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.history-empty {
+  color: #6b7280;
+  font-style: italic;
+  text-align: center;
+  padding: 1rem;
+  background-color: #f9fafb;
+  border-radius: 0.375rem;
+}
+
+.history-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.history-table th {
+  text-align: left;
+  padding: 0.75rem;
+  font-weight: 500;
+  font-size: 0.875rem;
+  color: #4b5563;
+  background-color: #f9fafb;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.history-table td {
+  padding: 0.75rem;
+  border-bottom: 1px solid #e5e7eb;
+  font-size: 0.875rem;
+}
+
+.history-field {
+  font-weight: 500;
+}
+
+.history-old-value {
+  color: #b91c1c;
+  text-decoration: line-through;
+}
+
+.history-new-value {
+  color: #15803d;
+}
+
+.history-reason {
+  font-style: italic;
+  color: #6b7280;
+}
+
+.history-timestamp {
+  white-space: nowrap;
+  color: #6b7280;
+}
+
+.history-user {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.history-user-avatar {
+  height: 1.5rem;
+  width: 1.5rem;
+  border-radius: 9999px;
+  background-color: #f3f4f6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.history-user-name {
+  font-weight: 500;
+}

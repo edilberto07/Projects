@@ -25,7 +25,7 @@ const EmployeeTableFilters = ({
   };
 
   return (
-    <div className="w-full bg-white p-4 rounded-md shadow-sm border border-gray-200">
+    <div className="w-full bg-white p-4 border-b border-gray-200">
       <div className="flex flex-col md:flex-row gap-4">
         {/* Search Input */}
         <div className="relative flex-grow">
