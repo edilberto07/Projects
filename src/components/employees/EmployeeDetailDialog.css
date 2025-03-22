@@ -1,0 +1,70 @@
+/* Employee Detail Dialog Styles */
+.detail-dialog-content {
+  max-width: 800px;
+  padding: 1.5rem;
+}
+
+.detail-dialog-header {
+  margin-bottom: 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.detail-dialog-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.detail-tabs {
+  margin-bottom: 1.5rem;
+}
+
+.detail-tab-content {
+  padding: 1rem 0;
+}
+
+.detail-section {
+  margin-bottom: 1.5rem;
+}
+
+.detail-section-header {
+  font-size: 1.125rem;
+  font-weight: 500;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.detail-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+.detail-field {
+  margin-bottom: 1rem;
+}
+
+.detail-field-label {
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin-bottom: 0.25rem;
+}
+
+.detail-field-value {
+  font-weight: 500;
+}
+
+.detail-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+  border-top: 1px solid #e5e7eb;
+  padding-top: 1.5rem;
+}

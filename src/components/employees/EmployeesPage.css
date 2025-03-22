@@ -1,0 +1,41 @@
+/* Employees Page Styles */
+.employees-page {
+  padding: 1.5rem;
+}
+
+.employees-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.employees-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.employees-actions {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.employees-content {
+  background-color: white;
+  border-radius: 0.5rem;
+  box-shadow:
+    0 1px 3px 0 rgba(0, 0, 0, 0.1),
+    0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  overflow: hidden;
+}
+
+.employees-tabs {
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.employees-tab-content {
+  padding: 1.5rem;
+}

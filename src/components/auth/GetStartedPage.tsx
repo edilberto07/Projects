@@ -16,7 +16,7 @@ const GetStartedPage: React.FC = () => {
               </div>
             </div>
             <h1 className="text-center text-3xl font-extrabold text-gray-900">
-              Campus Admin Payroll Portal
+              BISU - Bilar Admin Payroll Portal
             </h1>
             <p className="mt-3 text-center text-sm text-gray-500">
               Secure access for authorized administrators only
@@ -36,8 +36,8 @@ const GetStartedPage: React.FC = () => {
           </div>
           <div className="mt-6">
             <p className="text-center text-xs text-gray-500">
-              &copy; {new Date().getFullYear()} State University. All rights
-              reserved.
+              &copy; {new Date().getFullYear()} Bohol Island State University
+              Bilar Campus. All rights reserved.
             </p>
           </div>
         </div>

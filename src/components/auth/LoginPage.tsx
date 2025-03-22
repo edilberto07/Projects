@@ -67,7 +67,7 @@ const LoginPage: React.FC = () => {
             </div>
           </div>
           <CardTitle className="text-2xl font-bold text-center">
-            Campus Admin Portal
+            Admin Portal
           </CardTitle>
           <CardDescription className="text-center">
             Enter your credentials to sign in
