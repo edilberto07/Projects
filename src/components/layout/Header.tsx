@@ -1,8 +1,8 @@
 import React from "react";
-import { Link } from "react-router-dom";
-import { useAuth } from "@/lib/auth";
-import { Bell, Search, Menu, X } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Bell, Search, Settings, User } from "lucide-react";
+import { Input } from "../ui/input";
+import { Button } from "../ui/button";
+import { Badge } from "../ui/badge";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,135 +10,143 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from "../ui/dropdown-menu";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 
-const Header: React.FC = () => {
-  const { user, logout } = useAuth();
-  const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
+interface HeaderProps {
+  universityName?: string;
+  userFullName?: string;
+  userRole?: string;
+  userAvatar?: string;
+  notificationCount?: number;
+}
 
+const Header = ({
+  universityName = "State University",
+  userFullName = "Jane Smith",
+  userRole = "Campus Administrator",
+  userAvatar = "",
+  notificationCount = 3,
+}: HeaderProps) => {
   return (
-    <header className="bg-white border-b border-gray-200 sticky top-0 z-30">
-      <div className="px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <button
-            type="button"
-            className="md:hidden text-gray-500 hover:text-gray-600"
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          >
-            {mobileMenuOpen ? (
-              <X className="h-6 w-6" />
-            ) : (
-              <Menu className="h-6 w-6" />
-            )}
-            <span className="sr-only">
-              {mobileMenuOpen ? "Close menu" : "Open menu"}
-            </span>
-          </button>
-
-          <div className="hidden md:flex items-center gap-6">
-            <Link
-              to="/dashboard"
-              className="text-gray-600 hover:text-primary transition-colors"
-            >
-              Dashboard
-            </Link>
-            <Link
-              to="/employees"
-              className="text-gray-600 hover:text-primary transition-colors"
-            >
-              Employees
-            </Link>
-            <Link
-              to="/payroll"
-              className="text-gray-600 hover:text-primary transition-colors"
-            >
-              Payroll
-            </Link>
-            <Link
-              to="/reports"
-              className="text-gray-600 hover:text-primary transition-colors"
-            >
-              Reports
-            </Link>
+    <header className="bg-white border-b border-gray-200 h-20 px-6 flex items-center justify-between w-full">
+      {/* University Branding */}
+      <div className="flex items-center">
+        <div className="flex items-center gap-3">
+          <div className="h-10 w-10 bg-blue-600 rounded-md flex items-center justify-center">
+            <span className="text-white font-bold text-xl">SU</span>
           </div>
-        </div>
-
-        <div className="flex items-center gap-4">
-          <Button variant="ghost" size="icon" className="text-gray-500">
-            <Bell className="h-5 w-5" />
-            <span className="sr-only">Notifications</span>
-          </Button>
-
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                variant="ghost"
-                className="flex items-center gap-2 hover:bg-gray-100"
-              >
-                <div className="h-8 w-8 rounded-full bg-gray-200 overflow-hidden">
-                  <img
-                    src="https://api.dicebear.com/7.x/avataaars/svg?seed=admin"
-                    alt="User avatar"
-                    className="h-full w-full object-cover"
-                  />
-                </div>
-                <div className="hidden md:block text-left">
-                  <p className="text-sm font-medium">
-                    {user?.firstName} {user?.lastName}
-                  </p>
-                  <p className="text-xs text-gray-500">{user?.email}</p>
-                </div>
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-56">
-              <DropdownMenuLabel>My Account</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem>
-                <Link to="/settings" className="w-full">
-                  Settings
-                </Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={logout}>Logout</DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <h1 className="text-xl font-semibold text-gray-800">
+            {universityName}
+          </h1>
         </div>
       </div>
 
-      {/* Mobile menu */}
-      {mobileMenuOpen && (
-        <div className="md:hidden bg-white border-b border-gray-200 py-2">
-          <nav className="flex flex-col space-y-1 px-4">
-            <Link
-              to="/dashboard"
-              className="px-3 py-2 rounded-md hover:bg-gray-100"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              Dashboard
-            </Link>
-            <Link
-              to="/employees"
-              className="px-3 py-2 rounded-md hover:bg-gray-100"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              Employees
-            </Link>
-            <Link
-              to="/payroll"
-              className="px-3 py-2 rounded-md hover:bg-gray-100"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              Payroll
-            </Link>
-            <Link
-              to="/reports"
-              className="px-3 py-2 rounded-md hover:bg-gray-100"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              Reports
-            </Link>
-          </nav>
+      {/* Search */}
+      <div className="flex-1 max-w-md mx-4 lg:mx-8">
+        <div className="relative">
+          <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
+          <Input
+            placeholder="Search employees, payroll batches..."
+            className="pl-9 w-full bg-gray-50"
+          />
         </div>
-      )}
+      </div>
+
+      {/* Actions */}
+      <div className="flex items-center gap-4">
+        {/* Notifications */}
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" size="icon" className="relative">
+              <Bell className="h-5 w-5 text-gray-600" />
+              {notificationCount > 0 && (
+                <Badge
+                  className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0"
+                  variant="destructive"
+                >
+                  {notificationCount}
+                </Badge>
+              )}
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-80">
+            <DropdownMenuLabel>Notifications</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <div className="max-h-80 overflow-y-auto">
+              <DropdownMenuItem className="cursor-pointer">
+                <div className="flex flex-col gap-1">
+                  <p className="font-medium">Payroll batch awaiting approval</p>
+                  <p className="text-xs text-gray-500">2 minutes ago</p>
+                </div>
+              </DropdownMenuItem>
+              <DropdownMenuItem className="cursor-pointer">
+                <div className="flex flex-col gap-1">
+                  <p className="font-medium">New employee record created</p>
+                  <p className="text-xs text-gray-500">1 hour ago</p>
+                </div>
+              </DropdownMenuItem>
+              <DropdownMenuItem className="cursor-pointer">
+                <div className="flex flex-col gap-1">
+                  <p className="font-medium">
+                    Monthly payroll report generated
+                  </p>
+                  <p className="text-xs text-gray-500">Yesterday</p>
+                </div>
+              </DropdownMenuItem>
+            </div>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem className="cursor-pointer text-center text-blue-600">
+              View all notifications
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+
+        {/* Settings */}
+        <Button variant="ghost" size="icon">
+          <Settings className="h-5 w-5 text-gray-600" />
+        </Button>
+
+        {/* User Profile */}
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button
+              variant="ghost"
+              className="flex items-center gap-2 pl-2 pr-0"
+            >
+              <Avatar>
+                <AvatarImage src={userAvatar} alt={userFullName} />
+                <AvatarFallback className="bg-blue-100 text-blue-800">
+                  {userFullName
+                    .split(" ")
+                    .map((name) => name[0])
+                    .join("")}
+                </AvatarFallback>
+              </Avatar>
+              <div className="flex flex-col items-start mr-2">
+                <span className="text-sm font-medium">{userFullName}</span>
+                <span className="text-xs text-gray-500">{userRole}</span>
+              </div>
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-56">
+            <DropdownMenuLabel>My Account</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem className="cursor-pointer">
+              <User className="mr-2 h-4 w-4" />
+              Profile
+            </DropdownMenuItem>
+            <DropdownMenuItem className="cursor-pointer">
+              <Settings className="mr-2 h-4 w-4" />
+              Settings
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem className="cursor-pointer text-red-600">
+              Log out
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
     </header>
   );
 };

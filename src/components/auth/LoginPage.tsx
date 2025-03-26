@@ -6,6 +6,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import BISULogo from "../../assets/bisu_logo.png";
+import BISUBG from "../../assets/images.jpeg";
 import {
   Card,
   CardContent,
@@ -58,25 +60,25 @@ const LoginPage: React.FC = () => {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4 py-12 sm:px-6 lg:px-8">
+    <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4 py-12 sm:px-6 lg:px-8 bg-" 
+    style={{ backgroundImage: `url(${BISUBG})` }}>
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-1">
           <div className="flex justify-center mb-4">
-            <div className="h-12 w-12 bg-blue-600 rounded-md flex items-center justify-center">
-              <span className="text-white font-bold text-xl">SU</span>
-            </div>
+          <div className="p-4 bg-blue-600 rounded-md flex items-center justify-center space-x-3">
+            <img src={BISULogo} alt="Logo" className="h-12 w-15" />
+            <span className="text-white font-bold text-lg text-center">
+              Bohol Island State University
+            </span>
+          </div>
+
           </div>
           <CardTitle className="text-2xl font-bold text-center">
-            Admin Portal
+            Campus Admin Portal
           </CardTitle>
           <CardDescription className="text-center">
             Enter your credentials to sign in
           </CardDescription>
-          <div className="mt-2 p-2 bg-yellow-100 border border-yellow-300 rounded-md text-sm text-yellow-800">
-            <p className="font-medium">Demo Credentials:</p>
-            <p>Email: admin@university.edu</p>
-            <p>Password: password123</p>
-          </div>
         </CardHeader>
         <CardContent>
           <Form {...form}>
@@ -93,7 +95,7 @@ const LoginPage: React.FC = () => {
                   <FormItem>
                     <FormLabel>Email</FormLabel>
                     <FormControl>
-                      <Input placeholder="admin@university.edu" {...field} />
+                      <Input placeholder="Enter your email" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -106,7 +108,7 @@ const LoginPage: React.FC = () => {
                   <FormItem>
                     <FormLabel>Password</FormLabel>
                     <FormControl>
-                      <Input type="password" placeholder="••••••" {...field} />
+                      <Input type="password" placeholder="Enter your password" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

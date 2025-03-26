@@ -15,7 +15,7 @@ const GetStartedPage: React.FC = () => {
                 <span className="text-white font-bold text-3xl">SU</span>
               </div>
             </div>
-            <h1 className="text-center text-3xl font-extrabold text-gray-900">
+            <h1 className="text-center text-3xl font-extrabold text-gray-
               BISU - Bilar Admin Payroll Portal
             </h1>
             <p className="mt-3 text-center text-sm text-gray-500">
