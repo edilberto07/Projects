@@ -6,7 +6,6 @@ import React, {
   ReactNode,
 } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios"; // Added axios for API calls
 
 interface User {
   id: string;
@@ -24,7 +23,7 @@ interface AuthContextType {
     email: string,
     password: string,
     firstName: string,
-    lastName: string
+    lastName: string,
   ) => Promise<void>;
   logout: () => void;
   isAuthenticated: boolean;
@@ -32,11 +31,13 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+// Using named function declaration for better Fast Refresh support
 function AuthProviderComponent({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false); // Start with false to avoid unnecessary loading state
   const navigate = useNavigate();
 
+  // Check if user is already logged in on mount
   useEffect(() => {
     try {
       const storedUser = localStorage.getItem("user");
@@ -45,54 +46,58 @@ function AuthProviderComponent({ children }: { children: ReactNode }) {
       }
     } catch (error) {
       console.error("Error loading user from localStorage:", error);
-      localStorage.removeItem("user");
+      localStorage.removeItem("user"); // Clear potentially corrupted data
     }
   }, []);
 
+  // Mock login function - in a real app, this would call an API
   const login = async (email: string, password: string) => {
     setLoading(true);
     try {
-      const response = await axios.post("https://api.example.com/login", {
-        email,
-        password,
-      });
+      // Add a small delay to simulate network request
+      await new Promise((resolve) => setTimeout(resolve, 500));
 
-      const { user } = response.data;
-      setUser(user);
-      localStorage.setItem("user", JSON.stringify(user));
-      navigate("/dashboard");
-    } catch (error) {
-      console.error("Login error:", error.response?.data || error.message);
-      throw new Error("Invalid credentials or server error.");
+      // For demo purposes, we'll accept any login with admin@university.edu/password123
+      if (email === "admin@university.edu" && password === "password123") {
+        const user = {
+          id: "1",
+          email: "admin@university.edu",
+          firstName: "Admin",
+          lastName: "User",
+          role: "admin",
+        };
+        setUser(user);
+        localStorage.setItem("user", JSON.stringify(user));
+        return;
+      }
+      throw new Error("Invalid credentials");
     } finally {
       setLoading(false);
     }
   };
 
+  // Mock register function - in a real app, this would call an API
   const register = async (
     email: string,
     password: string,
     firstName: string,
-    lastName: string
+    lastName: string,
   ) => {
     setLoading(true);
     try {
-      await axios.post("https://api.example.com/register", {
-        email,
-        password,
-        firstName,
-        lastName,
-      });
-      console.log("User successfully registered.");
-      navigate("/login"); // Redirect to login after successful registration
-    } catch (error) {
-      console.error("Registration error:", error.response?.data || error.message);
-      throw new Error("Registration failed. Please try again.");
+      // Add a small delay to simulate network request
+      await new Promise((resolve) => setTimeout(resolve, 500));
+
+      // In a real app, this would create a new user in the database
+      // For demo purposes, we'll just simulate a successful registration
+      console.log("Registered user:", { email, firstName, lastName });
+      return;
     } finally {
       setLoading(false);
     }
   };
 
+  // Logout function
   const logout = () => {
     setUser(null);
     localStorage.removeItem("user");
@@ -113,6 +118,7 @@ function AuthProviderComponent({ children }: { children: ReactNode }) {
 
 export const AuthProvider = AuthProviderComponent;
 
+// Using named function declaration for better Fast Refresh support
 function useAuthHook() {
   const context = useContext(AuthContext);
   if (context === undefined) {

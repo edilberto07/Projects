@@ -5,7 +5,6 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import BISULogo from "../../assets/bisu_logo.png";
 import {
   Card,
   CardContent,
@@ -78,11 +77,10 @@ const RegisterPage: React.FC = () => {
     <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4 py-12 sm:px-6 lg:px-8">
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-1">
-        <div className="p-4 bg-blue-600 rounded-md flex items-center justify-center space-x-3">
-            <img src={BISULogo} alt="Logo" className="h-12 w-15" />
-            <span className="text-white font-bold text-lg text-center">
-              Bohol Island State University
-            </span>
+          <div className="flex justify-center mb-4">
+            <div className="h-12 w-12 bg-blue-600 rounded-md flex items-center justify-center">
+              <span className="text-white font-bold text-xl">SU</span>
+            </div>
           </div>
           <CardTitle className="text-2xl font-bold text-center">
             Create an Account
@@ -107,7 +105,7 @@ const RegisterPage: React.FC = () => {
                     <FormItem>
                       <FormLabel>First Name</FormLabel>
                       <FormControl>
-                        <Input placeholder="Enter First Name" {...field} />
+                        <Input placeholder="John" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -120,7 +118,7 @@ const RegisterPage: React.FC = () => {
                     <FormItem>
                       <FormLabel>Last Name</FormLabel>
                       <FormControl>
-                        <Input placeholder="Enter Last Name" {...field} />
+                        <Input placeholder="Doe" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -134,7 +132,7 @@ const RegisterPage: React.FC = () => {
                   <FormItem>
                     <FormLabel>Email</FormLabel>
                     <FormControl>
-                      <Input placeholder="Enter your email" {...field} />
+                      <Input placeholder="john.doe@university.edu" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -147,7 +145,7 @@ const RegisterPage: React.FC = () => {
                   <FormItem>
                     <FormLabel>Password</FormLabel>
                     <FormControl>
-                      <Input type="password" placeholder="Enter your password" {...field} />
+                      <Input type="password" placeholder="••••••" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -160,7 +158,7 @@ const RegisterPage: React.FC = () => {
                   <FormItem>
                     <FormLabel>Confirm Password</FormLabel>
                     <FormControl>
-                      <Input type="password" placeholder="Confirm your password" {...field} />
+                      <Input type="password" placeholder="••••••" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
