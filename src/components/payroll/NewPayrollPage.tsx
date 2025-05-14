@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import NetPayCalculator from "../employees/NetPayCalculator";
 import AdminAuthDialog from "../employees/AdminAuthDialog";
 import ChangeReasonDialog from "./ChangeReasonDialog";
+import EmployeeDetails from "./EmployeeDetails";
 import {
   Search,
   User,
@@ -35,6 +36,11 @@ interface Employee {
   address: string;
   emergencyContact: string;
   notes: string;
+}
+
+interface NewPayrollPageProps {
+  showPayrollPreview?: boolean;
+  onTogglePreview?: () => void;
 }
 
 interface PayrollRecord {
@@ -226,7 +232,11 @@ const mockPayrollRecords: PayrollRecord[] = [
   },
 ];
 
-const NewPayrollPage: React.FC = () => {
+const NewPayrollPage: React.FC<NewPayrollPageProps> = ({
+  showPayrollPreview = false,
+  onTogglePreview,
+}) => {
+  const [isPreviewMinimized, setIsPreviewMinimized] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(
     null,
@@ -444,7 +454,7 @@ const NewPayrollPage: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col space-y-6 bg-gray-50">
+    <div className="flex flex-col space-y-4 bg-transparent">
       {/* Authentication Dialog */}
       <AdminAuthDialog
         open={showAuthDialog}
@@ -460,9 +470,10 @@ const NewPayrollPage: React.FC = () => {
         onConfirm={handleChangeReason}
         fieldName={currentFieldToChange}
       />
-      <div className="flex flex-col md:flex-row gap-6">
+
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
         {/* Employee Sidebar */}
-        <div className="w-full md:w-1/4 bg-white rounded-lg border border-gray-200 shadow-sm max-h-[calc(100vh-200px)]">
+        <div className="lg:col-span-3 bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden max-h-[calc(100vh-200px)]">
           <div className="p-4 border-b border-gray-200">
             <h2 className="text-lg font-semibold">Employees</h2>
             <div className="relative mt-2">
@@ -475,7 +486,7 @@ const NewPayrollPage: React.FC = () => {
               />
             </div>
           </div>
-          <ScrollArea className="h-[calc(100vh-200px)]">
+          <ScrollArea className="h-[calc(100vh-280px)]">
             <div className="p-2">
               {filteredEmployees.map((employee) => (
                 <div
@@ -491,6 +502,9 @@ const NewPayrollPage: React.FC = () => {
                       <h3 className="font-medium">
                         {employee.firstName} {employee.lastName}
                       </h3>
+                      <p className="text-xs text-gray-500">
+                        {employee.department}
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -500,101 +514,58 @@ const NewPayrollPage: React.FC = () => {
         </div>
 
         {/* Main Content */}
-        <div className="flex-1 space-y-6">
+        <div
+          className={`${isPreviewMinimized ? "lg:col-span-9" : "lg:col-span-5"} space-y-4`}
+        >
           {selectedEmployee ? (
             <>
               {/* Employee Details Card */}
-              <Card>
-                <CardHeader className="pb-2">
-                  <CardTitle className="text-xl font-semibold flex items-center gap-2">
-                    <User className="h-5 w-5" />
-                    {selectedEmployee.firstName} {selectedEmployee.lastName}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div>
-                      <p className="text-sm text-gray-500">Department</p>
-                      <p className="font-medium">
-                        {selectedEmployee.department}
-                      </p>
-                    </div>
-                    <div>
-                      <p className="text-sm text-gray-500">Position</p>
-                      <p className="font-medium">{selectedEmployee.position}</p>
-                    </div>
-                    <div>
-                      <p className="text-sm text-gray-500">Employment Type</p>
-                      <p className="font-medium">
-                        {selectedEmployee.employmentType}
-                      </p>
-                    </div>
-                    <div>
-                      <p className="text-sm text-gray-500">Email</p>
-                      <p className="font-medium">{selectedEmployee.email}</p>
-                    </div>
-                    <div>
-                      <p className="text-sm text-gray-500">Phone</p>
-                      <p className="font-medium">{selectedEmployee.phone}</p>
-                    </div>
-                    <div>
-                      <p className="text-sm text-gray-500">Start Date</p>
-                      <p className="font-medium">
-                        {selectedEmployee.startDate}
-                      </p>
-                    </div>
-                  </div>
-
-                  <Separator className="my-4" />
-
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div>
-                      <p className="text-sm text-gray-500">
-                        Basic Monthly Compensation
-                      </p>
-                      <div className="flex items-center gap-2">
-                        <p className="font-medium text-lg">
-                          ₱
-                          {(selectedEmployee.salary / 12).toLocaleString(
-                            undefined,
-                            { maximumFractionDigits: 2 },
-                          )}
-                        </p>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="h-6 px-2 text-xs"
-                          onClick={() =>
-                            handleFieldChange("Basic Monthly Compensation")
-                          }
-                        >
-                          Edit
-                        </Button>
-                      </div>
-                    </div>
-                    <div>
-                      <p className="text-sm text-gray-500">Annual Salary</p>
-                      <p className="font-medium">
-                        ₱{selectedEmployee.salary.toLocaleString()}
-                      </p>
-                    </div>
-                    <div>
-                      <p className="text-sm text-gray-500">Pay Period</p>
-                      <p className="font-medium">{payPeriod}</p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
+              <EmployeeDetails
+                employee={selectedEmployee}
+                payPeriod={payPeriod}
+                onFieldChange={handleFieldChange}
+              />
 
               {/* Net Pay Calculator */}
-              <Card>
-                <CardHeader className="pb-2">
-                  <CardTitle className="text-xl font-semibold flex items-center gap-2">
-                    <DollarSign className="h-5 w-5" />
-                    NET PAY Calculator
+              <Card className="shadow-sm">
+                <CardHeader className="pb-2 border-b">
+                  <CardTitle className="text-xl font-semibold flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <DollarSign className="h-5 w-5" />
+                      NET PAY Calculator
+                    </div>
+                    {isPreviewMinimized && showPayrollPreview && (
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="h-8 w-8 p-0"
+                        onClick={() => {
+                          setIsPreviewMinimized(false);
+                          if (onTogglePreview) onTogglePreview();
+                        }}
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="16"
+                          height="16"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          className="lucide lucide-maximize-2"
+                        >
+                          <polyline points="15 3 21 3 21 9" />
+                          <polyline points="9 21 3 21 3 15" />
+                          <line x1="21" y1="3" x2="14" y2="10" />
+                          <line x1="3" y1="21" x2="10" y2="14" />
+                        </svg>
+                      </Button>
+                    )}
                   </CardTitle>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="p-5">
                   <NetPayCalculator
                     initialSalary={selectedEmployee.salary}
                     onCalculate={handleNetPayCalculated}
@@ -602,207 +573,33 @@ const NewPayrollPage: React.FC = () => {
                 </CardContent>
               </Card>
 
-              {/* Payroll Preview */}
-              <Card>
-                <CardHeader className="pb-2">
-                  <CardTitle className="text-xl font-semibold flex items-center gap-2">
-                    <FileText className="h-5 w-5" />
-                    Payroll Preview
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="bg-gray-50 p-4 rounded-md border border-gray-200">
-                    <div className="flex justify-between items-center mb-4">
-                      <h3 className="text-lg font-medium">Payroll Summary</h3>
-                      <Badge
-                        variant={
-                          currentPayroll?.status === "draft"
-                            ? "outline"
-                            : "default"
-                        }
-                        className={
-                          currentPayroll?.status === "draft"
-                            ? "bg-yellow-50 text-yellow-700"
-                            : ""
-                        }
-                      >
-                        {currentPayroll?.status === "draft"
-                          ? "Draft"
-                          : currentPayroll?.status === "processed"
-                            ? "Processed"
-                            : "Paid"}
-                      </Badge>
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <p className="text-sm text-gray-500">Employee</p>
-                        <p className="font-medium">
-                          {selectedEmployee.firstName}{" "}
-                          {selectedEmployee.lastName}
-                        </p>
-                      </div>
-                      <div>
-                        <p className="text-sm text-gray-500">Pay Period</p>
-                        <p className="font-medium">
-                          {currentPayroll?.payPeriod}
-                        </p>
-                      </div>
-                      <div>
-                        <p className="text-sm text-gray-500">Basic Pay</p>
-                        <p className="font-medium">
-                          ₱
-                          {currentPayroll?.basicPay.toLocaleString(undefined, {
-                            maximumFractionDigits: 2,
-                          })}
-                        </p>
-                      </div>
-                      <div>
-                        <p className="text-sm text-gray-500">Gross Pay</p>
-                        <p className="font-medium">
-                          ₱
-                          {currentPayroll?.grossPay.toLocaleString(undefined, {
-                            maximumFractionDigits: 2,
-                          })}
-                        </p>
-                      </div>
-                    </div>
-
-                    <Separator className="my-4" />
-
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <p className="text-sm text-gray-500">Tax Withheld</p>
-                        <p className="font-medium text-red-600">
-                          -₱
-                          {currentPayroll?.taxWithheld.toLocaleString(
-                            undefined,
-                            { maximumFractionDigits: 2 },
-                          )}
-                        </p>
-                      </div>
-                      <div>
-                        <p className="text-sm text-gray-500">
-                          SSS Contribution
-                        </p>
-                        <p className="font-medium text-red-600">
-                          -₱
-                          {currentPayroll?.sssContribution.toLocaleString(
-                            undefined,
-                            { maximumFractionDigits: 2 },
-                          )}
-                        </p>
-                      </div>
-                      <div>
-                        <p className="text-sm text-gray-500">PhilHealth</p>
-                        <p className="font-medium text-red-600">
-                          -₱
-                          {currentPayroll?.philHealthContribution.toLocaleString(
-                            undefined,
-                            { maximumFractionDigits: 2 },
-                          )}
-                        </p>
-                      </div>
-                      <div>
-                        <p className="text-sm text-gray-500">Pag-IBIG</p>
-                        <p className="font-medium text-red-600">
-                          -₱
-                          {currentPayroll?.pagIbigContribution.toLocaleString(
-                            undefined,
-                            { maximumFractionDigits: 2 },
-                          )}
-                        </p>
-                      </div>
-                      <div>
-                        <p className="text-sm text-gray-500">
-                          Other Deductions
-                        </p>
-                        <p className="font-medium text-red-600">
-                          -₱
-                          {currentPayroll?.otherDeductions.toLocaleString(
-                            undefined,
-                            { maximumFractionDigits: 2 },
-                          )}
-                        </p>
-                      </div>
-                    </div>
-
-                    <Separator className="my-4" />
-
-                    <div className="flex justify-between items-center">
-                      <p className="text-lg font-bold">Net Pay:</p>
-                      <p className="text-xl font-bold text-primary">
-                        ₱
-                        {calculatedNetPay.toLocaleString(undefined, {
-                          maximumFractionDigits: 2,
-                        })}
-                      </p>
-                    </div>
-
-                    <div className="mt-6 flex justify-between gap-2">
-                      <Button
-                        variant="outline"
-                        className="flex items-center gap-2"
-                        onClick={handleNextEmployee}
-                        disabled={!selectedEmployee}
-                      >
-                        Save & Next <ChevronRight className="h-4 w-4" />
-                      </Button>
-
-                      <div className="flex gap-2">
-                        <Button
-                          variant="outline"
-                          className="flex items-center gap-2"
-                        >
-                          <Printer className="h-4 w-4" />
-                          Print Preview
-                        </Button>
-                        <Button
-                          className="flex items-center gap-2"
-                          onClick={handleSavePayroll}
-                          disabled={
-                            currentPayroll?.status === "processed" ||
-                            currentPayroll?.status === "paid"
-                          }
-                        >
-                          <Save className="h-4 w-4" />
-                          {currentPayroll?.status === "draft"
-                            ? "Process Payroll"
-                            : "Processed"}
-                        </Button>
-                      </div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
               {/* Employee Payroll History */}
-              <Card>
-                <CardHeader className="pb-2">
+              <Card className="shadow-sm">
+                <CardHeader className="pb-2 border-b">
                   <CardTitle className="text-xl font-semibold flex items-center gap-2">
                     <FileText className="h-5 w-5" />
                     Payroll History
                   </CardTitle>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="p-5">
                   {getEmployeePayrollHistory(selectedEmployee.id).length > 0 ? (
-                    <div className="overflow-x-auto">
+                    <div className="overflow-x-auto rounded-md border border-gray-200 bg-white">
                       <table className="w-full border-collapse">
                         <thead>
-                          <tr className="bg-gray-50">
-                            <th className="border border-gray-200 px-4 py-2 text-left">
+                          <tr className="bg-gray-50 border-b border-gray-200">
+                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                               Pay Period
                             </th>
-                            <th className="border border-gray-200 px-4 py-2 text-right">
+                            <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
                               Gross Pay
                             </th>
-                            <th className="border border-gray-200 px-4 py-2 text-right">
+                            <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
                               Deductions
                             </th>
-                            <th className="border border-gray-200 px-4 py-2 text-right">
+                            <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
                               Net Pay
                             </th>
-                            <th className="border border-gray-200 px-4 py-2 text-center">
+                            <th className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                               Status
                             </th>
                           </tr>
@@ -820,30 +617,42 @@ const NewPayrollPage: React.FC = () => {
                               return (
                                 <tr
                                   key={record.id}
-                                  className="hover:bg-gray-50"
+                                  className="hover:bg-gray-50 border-b border-gray-200 last:border-b-0"
                                 >
-                                  <td className="border border-gray-200 px-4 py-2">
+                                  <td className="px-4 py-3 whitespace-nowrap">
                                     {record.payPeriod}
                                   </td>
-                                  <td className="border border-gray-200 px-4 py-2 text-right">
-                                    ₱
-                                    {record.grossPay.toLocaleString(undefined, {
-                                      maximumFractionDigits: 2,
-                                    })}
+                                  <td className="px-4 py-3 text-right whitespace-nowrap">
+                                    <span className="inline-block min-w-[100px] text-right">
+                                      ₱
+                                      {record.grossPay.toLocaleString(
+                                        undefined,
+                                        {
+                                          maximumFractionDigits: 2,
+                                        },
+                                      )}
+                                    </span>
                                   </td>
-                                  <td className="border border-gray-200 px-4 py-2 text-right text-red-600">
-                                    -₱
-                                    {totalDeductions.toLocaleString(undefined, {
-                                      maximumFractionDigits: 2,
-                                    })}
+                                  <td className="px-4 py-3 text-right text-red-600 whitespace-nowrap">
+                                    <span className="inline-block min-w-[100px] text-right">
+                                      -₱
+                                      {totalDeductions.toLocaleString(
+                                        undefined,
+                                        {
+                                          maximumFractionDigits: 2,
+                                        },
+                                      )}
+                                    </span>
                                   </td>
-                                  <td className="border border-gray-200 px-4 py-2 text-right font-bold">
-                                    ₱
-                                    {record.netPay.toLocaleString(undefined, {
-                                      maximumFractionDigits: 2,
-                                    })}
+                                  <td className="px-4 py-3 text-right font-bold whitespace-nowrap">
+                                    <span className="inline-block min-w-[100px] text-right">
+                                      ₱
+                                      {record.netPay.toLocaleString(undefined, {
+                                        maximumFractionDigits: 2,
+                                      })}
+                                    </span>
                                   </td>
-                                  <td className="border border-gray-200 px-4 py-2 text-center">
+                                  <td className="px-4 py-3 text-center whitespace-nowrap">
                                     <Badge
                                       variant={
                                         record.status === "draft"
@@ -873,24 +682,255 @@ const NewPayrollPage: React.FC = () => {
                       </table>
                     </div>
                   ) : (
-                    <div className="text-center py-8 text-gray-500">
-                      No payroll history found for this employee.
+                    <div className="text-center py-12 text-gray-500 bg-gray-50 rounded-md border border-gray-200">
+                      <FileText className="h-10 w-10 text-gray-300 mx-auto mb-3" />
+                      <p>No payroll history found for this employee.</p>
                     </div>
                   )}
                 </CardContent>
               </Card>
             </>
           ) : (
-            <div className="bg-white p-8 rounded-md shadow-sm border border-gray-200 text-center">
-              <User className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+            <div className="bg-white p-8 rounded-lg shadow-sm border border-gray-200 text-center flex flex-col items-center justify-center min-h-[400px]">
+              <div className="bg-gray-100 rounded-full p-6 mb-4">
+                <User className="h-12 w-12 text-gray-400" />
+              </div>
               <h3 className="text-lg font-medium mb-2">Select an Employee</h3>
-              <p className="text-gray-500">
+              <p className="text-gray-500 max-w-md">
                 Please select an employee from the sidebar to process their
                 payroll.
               </p>
             </div>
           )}
         </div>
+
+        {/* Payroll Preview - Only shown when showPayrollPreview is true and not minimized */}
+        {showPayrollPreview &&
+          selectedEmployee &&
+          currentPayroll &&
+          !isPreviewMinimized && (
+            <div className="lg:col-span-4">
+              <Card className="h-full shadow-sm">
+                <CardHeader className="pb-2 border-b">
+                  <CardTitle className="text-xl font-semibold flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <FileText className="h-5 w-5" />
+                      Payroll Preview
+                    </div>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="h-8 w-8 p-0"
+                      onClick={() => {
+                        setIsPreviewMinimized(true);
+                        if (onTogglePreview) onTogglePreview();
+                      }}
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        className="lucide lucide-minimize-2"
+                      >
+                        <polyline points="4 14 10 14 10 20" />
+                        <polyline points="20 10 14 10 14 4" />
+                        <line x1="14" y1="10" x2="21" y2="3" />
+                        <line x1="3" y1="21" x2="10" y2="14" />
+                      </svg>
+                    </Button>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="p-5">
+                  <div className="bg-white p-4 rounded-md border border-gray-100">
+                    <div className="flex justify-between items-center mb-4">
+                      <h3 className="text-lg font-medium">Payroll Summary</h3>
+                      <Badge
+                        variant={
+                          currentPayroll?.status === "draft"
+                            ? "outline"
+                            : "default"
+                        }
+                        className={
+                          currentPayroll?.status === "draft"
+                            ? "bg-yellow-50 text-yellow-700"
+                            : ""
+                        }
+                      >
+                        {currentPayroll?.status === "draft"
+                          ? "Draft"
+                          : currentPayroll?.status === "processed"
+                            ? "Processed"
+                            : "Paid"}
+                      </Badge>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      <div className="bg-gray-50 p-3 rounded-md">
+                        <p className="text-xs text-gray-500 uppercase tracking-wider">
+                          Employee
+                        </p>
+                        <p className="font-medium mt-1">
+                          {selectedEmployee.firstName}{" "}
+                          {selectedEmployee.lastName}
+                        </p>
+                      </div>
+                      <div className="bg-gray-50 p-3 rounded-md">
+                        <p className="text-xs text-gray-500 uppercase tracking-wider">
+                          Pay Period
+                        </p>
+                        <p className="font-medium mt-1">
+                          {currentPayroll?.payPeriod}
+                        </p>
+                      </div>
+                      <div className="bg-gray-50 p-3 rounded-md">
+                        <p className="text-xs text-gray-500 uppercase tracking-wider">
+                          Basic Pay
+                        </p>
+                        <p className="font-medium mt-1 overflow-hidden text-ellipsis">
+                          ₱
+                          {currentPayroll?.basicPay.toLocaleString(undefined, {
+                            maximumFractionDigits: 2,
+                          })}
+                        </p>
+                      </div>
+                      <div className="bg-gray-50 p-3 rounded-md">
+                        <p className="text-xs text-gray-500 uppercase tracking-wider">
+                          Gross Pay
+                        </p>
+                        <p className="font-medium mt-1 overflow-hidden text-ellipsis">
+                          ₱
+                          {currentPayroll?.grossPay.toLocaleString(undefined, {
+                            maximumFractionDigits: 2,
+                          })}
+                        </p>
+                      </div>
+                    </div>
+
+                    <Separator className="my-4" />
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      <div className="bg-red-50 p-3 rounded-md">
+                        <p className="text-xs text-red-500 uppercase tracking-wider">
+                          Tax Withheld
+                        </p>
+                        <p className="font-medium text-red-600 mt-1 overflow-hidden text-ellipsis">
+                          -₱
+                          {currentPayroll?.taxWithheld.toLocaleString(
+                            undefined,
+                            {
+                              maximumFractionDigits: 2,
+                            },
+                          )}
+                        </p>
+                      </div>
+                      <div className="bg-red-50 p-3 rounded-md">
+                        <p className="text-xs text-red-500 uppercase tracking-wider">
+                          SSS Contribution
+                        </p>
+                        <p className="font-medium text-red-600 mt-1 overflow-hidden text-ellipsis">
+                          -₱
+                          {currentPayroll?.sssContribution.toLocaleString(
+                            undefined,
+                            { maximumFractionDigits: 2 },
+                          )}
+                        </p>
+                      </div>
+                      <div className="bg-red-50 p-3 rounded-md">
+                        <p className="text-xs text-red-500 uppercase tracking-wider">
+                          PhilHealth
+                        </p>
+                        <p className="font-medium text-red-600 mt-1 overflow-hidden text-ellipsis">
+                          -₱
+                          {currentPayroll?.philHealthContribution.toLocaleString(
+                            undefined,
+                            { maximumFractionDigits: 2 },
+                          )}
+                        </p>
+                      </div>
+                      <div className="bg-red-50 p-3 rounded-md">
+                        <p className="text-xs text-red-500 uppercase tracking-wider">
+                          Pag-IBIG
+                        </p>
+                        <p className="font-medium text-red-600 mt-1 overflow-hidden text-ellipsis">
+                          -₱
+                          {currentPayroll?.pagIbigContribution.toLocaleString(
+                            undefined,
+                            { maximumFractionDigits: 2 },
+                          )}
+                        </p>
+                      </div>
+                      <div className="bg-red-50 p-3 rounded-md col-span-1 sm:col-span-2">
+                        <p className="text-xs text-red-500 uppercase tracking-wider">
+                          Other Deductions
+                        </p>
+                        <p className="font-medium text-red-600 mt-1 overflow-hidden text-ellipsis">
+                          -₱
+                          {currentPayroll?.otherDeductions.toLocaleString(
+                            undefined,
+                            { maximumFractionDigits: 2 },
+                          )}
+                        </p>
+                      </div>
+                    </div>
+
+                    <Separator className="my-4" />
+
+                    <div className="flex justify-between items-center bg-green-50 p-4 rounded-md mt-3">
+                      <p className="text-lg font-bold text-green-800">
+                        Net Pay:
+                      </p>
+                      <p className="text-xl font-bold text-green-700">
+                        ₱
+                        {calculatedNetPay.toLocaleString(undefined, {
+                          maximumFractionDigits: 2,
+                        })}
+                      </p>
+                    </div>
+
+                    <div className="mt-8 flex flex-col sm:flex-row justify-between gap-3">
+                      <Button
+                        variant="outline"
+                        className="flex items-center gap-2 border-gray-300 hover:bg-gray-50"
+                        onClick={handleNextEmployee}
+                        disabled={!selectedEmployee}
+                      >
+                        Save & Next <ChevronRight className="h-4 w-4" />
+                      </Button>
+
+                      <div className="flex gap-3 flex-wrap">
+                        <Button
+                          variant="outline"
+                          className="flex items-center gap-2 border-gray-300 hover:bg-gray-50"
+                        >
+                          <Printer className="h-4 w-4" />
+                          Print Preview
+                        </Button>
+                        <Button
+                          className="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white"
+                          onClick={handleSavePayroll}
+                          disabled={
+                            currentPayroll?.status === "processed" ||
+                            currentPayroll?.status === "paid"
+                          }
+                        >
+                          <Save className="h-4 w-4" />
+                          {currentPayroll?.status === "draft"
+                            ? "Process Payroll"
+                            : "Processed"}
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          )}
       </div>
     </div>
   );

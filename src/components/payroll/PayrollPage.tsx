@@ -1,14 +1,16 @@
 import React from "react";
 import { useState } from "react";
 import DashboardLayout from "../layout/DashboardLayout";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { DollarSign, FileText } from "lucide-react";
 import NewPayrollPage from "./NewPayrollPage";
 import PayrollRecords from "./PayrollRecords";
 
 const PayrollPage: React.FC = () => {
-  const [activeTab, setActiveTab] = useState("new");
+  const [previewToggled, setPreviewToggled] = useState(false);
 
+  const handleTogglePreview = () => {
+    setPreviewToggled(!previewToggled);
+  };
   return (
     <DashboardLayout>
       <div className="space-y-6 bg-gray-50">
@@ -24,29 +26,35 @@ const PayrollPage: React.FC = () => {
           </div>
         </div>
 
-        <Tabs
-          defaultValue={activeTab}
-          value={activeTab}
-          onValueChange={setActiveTab}
-        >
-          <TabsList className="grid w-full max-w-md grid-cols-2">
-            <TabsTrigger value="new" className="flex items-center gap-2">
-              <DollarSign className="h-4 w-4" />
-              Payroll
-            </TabsTrigger>
-            <TabsTrigger value="records" className="flex items-center gap-2">
-              <FileText className="h-4 w-4" />
-              Payroll Records
-            </TabsTrigger>
-          </TabsList>
+        {/* Main content */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          {/* Payroll Processing Section */}
+          <div className="lg:col-span-12">
+            <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+              <h2 className="text-xl font-semibold p-5 pb-4 flex items-center gap-2 border-b border-gray-100">
+                <DollarSign className="h-5 w-5 text-primary" />
+                Payroll Processing
+              </h2>
+              <NewPayrollPage
+                showPayrollPreview={true}
+                onTogglePreview={handleTogglePreview}
+              />
+            </div>
+          </div>
 
-          <TabsContent value="new" className="mt-4">
-            <NewPayrollPage />
-          </TabsContent>
-          <TabsContent value="records" className="mt-4">
-            <PayrollRecords />
-          </TabsContent>
-        </Tabs>
+          {/* Recent Records Section */}
+          <div className="lg:col-span-12">
+            <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+              <h2 className="text-xl font-semibold p-5 pb-4 flex items-center gap-2 border-b border-gray-100">
+                <FileText className="h-5 w-5 text-primary" />
+                Recent Records
+              </h2>
+              <div className="p-5 pt-4">
+                <PayrollRecords compact={true} />
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </DashboardLayout>
   );

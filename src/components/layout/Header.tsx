@@ -1,7 +1,18 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "@/lib/auth";
-import { Bell, Search, Menu, X } from "lucide-react";
+import {
+  Bell,
+  Search,
+  Menu,
+  X,
+  LayoutDashboard,
+  Users,
+  DollarSign,
+  FileText,
+  Settings,
+  LogOut,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -15,6 +26,36 @@ import {
 const Header: React.FC = () => {
   const { user, logout } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
+  const location = useLocation();
+  const currentPath = location.pathname;
+
+  const navItems = [
+    {
+      icon: <LayoutDashboard className="h-5 w-5" />,
+      label: "Dashboard",
+      path: "/dashboard",
+    },
+    {
+      icon: <Users className="h-5 w-5" />,
+      label: "Employee Management",
+      path: "/employees",
+    },
+    {
+      icon: <DollarSign className="h-5 w-5" />,
+      label: "Payroll Processing",
+      path: "/payroll",
+    },
+    {
+      icon: <FileText className="h-5 w-5" />,
+      label: "Report Generation",
+      path: "/reports",
+    },
+    {
+      icon: <Settings className="h-5 w-5" />,
+      label: "Settings",
+      path: "/settings",
+    },
+  ];
 
   return (
     <header className="bg-white border-b border-gray-200 sticky top-0 z-30">
@@ -35,31 +76,27 @@ const Header: React.FC = () => {
             </span>
           </button>
 
+          <Link to="/dashboard" className="flex items-center">
+            <h1 className="text-xl font-bold text-primary mr-8">
+              BISU - Bilar
+            </h1>
+          </Link>
+
           <div className="hidden md:flex items-center gap-6">
-            <Link
-              to="/dashboard"
-              className="text-gray-600 hover:text-primary transition-colors"
-            >
-              Dashboard
-            </Link>
-            <Link
-              to="/employees"
-              className="text-gray-600 hover:text-primary transition-colors"
-            >
-              Employees
-            </Link>
-            <Link
-              to="/payroll"
-              className="text-gray-600 hover:text-primary transition-colors"
-            >
-              Payroll
-            </Link>
-            <Link
-              to="/reports"
-              className="text-gray-600 hover:text-primary transition-colors"
-            >
-              Reports
-            </Link>
+            {navItems.map((item) => (
+              <Link
+                key={item.path}
+                to={item.path}
+                className={`flex items-center gap-2 px-3 py-2 rounded-md transition-colors ${
+                  currentPath.startsWith(item.path)
+                    ? "bg-primary/10 text-primary font-medium"
+                    : "text-gray-600 hover:bg-gray-100"
+                }`}
+              >
+                {item.icon}
+                <span>{item.label}</span>
+              </Link>
+            ))}
           </div>
         </div>
 
@@ -98,7 +135,13 @@ const Header: React.FC = () => {
                   Settings
                 </Link>
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={logout}>Logout</DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={logout}
+                className="flex items-center gap-2"
+              >
+                <LogOut className="h-4 w-4" />
+                <span>Logout</span>
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
@@ -108,34 +151,21 @@ const Header: React.FC = () => {
       {mobileMenuOpen && (
         <div className="md:hidden bg-white border-b border-gray-200 py-2">
           <nav className="flex flex-col space-y-1 px-4">
-            <Link
-              to="/dashboard"
-              className="px-3 py-2 rounded-md hover:bg-gray-100"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              Dashboard
-            </Link>
-            <Link
-              to="/employees"
-              className="px-3 py-2 rounded-md hover:bg-gray-100"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              Employees
-            </Link>
-            <Link
-              to="/payroll"
-              className="px-3 py-2 rounded-md hover:bg-gray-100"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              Payroll
-            </Link>
-            <Link
-              to="/reports"
-              className="px-3 py-2 rounded-md hover:bg-gray-100"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              Reports
-            </Link>
+            {navItems.map((item) => (
+              <Link
+                key={item.path}
+                to={item.path}
+                className={`flex items-center gap-2 px-3 py-2 rounded-md transition-colors ${
+                  currentPath.startsWith(item.path)
+                    ? "bg-primary/10 text-primary font-medium"
+                    : "text-gray-600 hover:bg-gray-100"
+                }`}
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                {item.icon}
+                <span>{item.label}</span>
+              </Link>
+            ))}
           </nav>
         </div>
       )}

@@ -33,6 +33,11 @@ const GetStartedPage: React.FC = () => {
             >
               Register New Account
             </Button>
+            <p className="mt-2 text-center text-xs text-gray-500">
+              <a href="#" className="text-blue-600 hover:underline">
+                Forgot your password?
+              </a>
+            </p>
           </div>
           <div className="mt-6">
             <p className="text-center text-xs text-gray-500">
