@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { User, ChevronUp, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
 import {
   Collapsible,
   CollapsibleContent,
@@ -13,29 +12,17 @@ interface Employee {
   id: string;
   firstName: string;
   lastName: string;
-  email: string;
-  phone: string;
-  department: string;
   position: string;
-  employmentType: string;
-  startDate: string;
   salary: number;
-  bankAccount: string;
-  taxId: string;
-  address: string;
-  emergencyContact: string;
-  notes: string;
 }
 
 interface EmployeeDetailsProps {
   employee: Employee;
-  payPeriod: string;
   onFieldChange: (fieldName: string) => void;
 }
 
 const EmployeeDetails: React.FC<EmployeeDetailsProps> = ({
   employee,
-  payPeriod,
   onFieldChange,
 }) => {
   const [isOpen, setIsOpen] = useState(true);
@@ -62,66 +49,33 @@ const EmployeeDetails: React.FC<EmployeeDetailsProps> = ({
         </CardHeader>
         <CollapsibleContent>
           <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div>
-                <p className="text-sm text-gray-500">Department</p>
-                <p className="font-medium">{employee.department}</p>
-              </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <p className="text-sm text-gray-500">Position</p>
                 <p className="font-medium">{employee.position}</p>
               </div>
               <div>
-                <p className="text-sm text-gray-500">Employment Type</p>
-                <p className="font-medium">{employee.employmentType}</p>
-              </div>
-              <div>
-                <p className="text-sm text-gray-500">Email</p>
-                <p className="font-medium">{employee.email}</p>
-              </div>
-              <div>
-                <p className="text-sm text-gray-500">Phone</p>
-                <p className="font-medium">{employee.phone}</p>
-              </div>
-              <div>
-                <p className="text-sm text-gray-500">Start Date</p>
-                <p className="font-medium">{employee.startDate}</p>
+                <p className="text-sm text-gray-500">Annual Salary</p>
+                <p className="font-medium">₱{employee.salary.toLocaleString()}</p>
               </div>
             </div>
-
-            <Separator className="my-4" />
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div>
-                <p className="text-sm text-gray-500">
-                  Basic Monthly Compensation
+            <div className="mt-4">
+              <p className="text-sm text-gray-500">Basic Monthly Compensation</p>
+              <div className="flex items-center gap-2">
+                <p className="font-medium text-lg">
+                  ₱
+                  {(employee.salary / 12).toLocaleString(undefined, {
+                    maximumFractionDigits: 2,
+                  })}
                 </p>
-                <div className="flex items-center gap-2">
-                  <p className="font-medium text-lg">
-                    ₱
-                    {(employee.salary / 12).toLocaleString(undefined, {
-                      maximumFractionDigits: 2,
-                    })}
-                  </p>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="h-6 px-2 text-xs"
-                    onClick={() => onFieldChange("Basic Monthly Compensation")}
-                  >
-                    Edit
-                  </Button>
-                </div>
-              </div>
-              <div>
-                <p className="text-sm text-gray-500">Annual Salary</p>
-                <p className="font-medium">
-                  ₱{employee.salary.toLocaleString()}
-                </p>
-              </div>
-              <div>
-                <p className="text-sm text-gray-500">Pay Period</p>
-                <p className="font-medium">{payPeriod}</p>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-6 px-2 text-xs"
+                  onClick={() => onFieldChange("Basic Monthly Compensation")}
+                >
+                  Edit
+                </Button>
               </div>
             </div>
           </CardContent>

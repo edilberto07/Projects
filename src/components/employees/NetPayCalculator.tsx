@@ -67,16 +67,36 @@ const NetPayCalculator: React.FC<NetPayCalculatorProps> = ({
   const [gf, setGf] = useState(0);
   const [stf, setStf] = useState(0);
   const [noticeOfDisallowance, setNoticeOfDisallowance] = useState(0);
-  const [paddyRice, setPaddyRice] = useState(0);
-  const [broilerChicken, setBroilerChicken] = useState(0);
-  const [talong, setTalong] = useState(0);
-  const [okra, setOkra] = useState(0);
-  const [batong, setBatong] = useState(0);
-  const [sitaw, setSitaw] = useState(0);
-  const [sili, setSili] = useState(0);
+  const [igpEntries, setIgpEntries] = useState<{ id: string; description: string; amount: number }[]>([]);
+  const [newIgpDescription, setNewIgpDescription] = useState("");
+  const [newIgpAmount, setNewIgpAmount] = useState(0);
   const [waterBill, setWaterBill] = useState(0);
   const [electricBill, setElectricBill] = useState(0);
   const [totalOtherDeductions, setTotalOtherDeductions] = useState(0);
+
+  // Calculate total IGP amount
+  const totalIgpAmount = igpEntries.reduce((sum, entry) => sum + entry.amount, 0);
+
+  // Add new IGP entry
+  const addIgpEntry = () => {
+    if (newIgpDescription && newIgpAmount > 0) {
+      setIgpEntries([
+        ...igpEntries,
+        {
+          id: Date.now().toString(),
+          description: newIgpDescription,
+          amount: newIgpAmount,
+        },
+      ]);
+      setNewIgpDescription("");
+      setNewIgpAmount(0);
+    }
+  };
+
+  // Remove IGP entry
+  const removeIgpEntry = (id: string) => {
+    setIgpEntries(igpEntries.filter(entry => entry.id !== id));
+  };
 
   // Calculate net pay whenever inputs change
   useEffect(() => {
@@ -126,13 +146,7 @@ const NetPayCalculator: React.FC<NetPayCalculatorProps> = ({
       gf +
       stf +
       noticeOfDisallowance +
-      paddyRice +
-      broilerChicken +
-      talong +
-      okra +
-      batong +
-      sitaw +
-      sili +
+      totalIgpAmount +
       waterBill +
       electricBill;
     setTotalOtherDeductions(total);
@@ -155,13 +169,7 @@ const NetPayCalculator: React.FC<NetPayCalculatorProps> = ({
     gf,
     stf,
     noticeOfDisallowance,
-    paddyRice,
-    broilerChicken,
-    talong,
-    okra,
-    batong,
-    sitaw,
-    sili,
+    igpEntries,
     waterBill,
     electricBill,
   ]);
@@ -321,7 +329,7 @@ const NetPayCalculator: React.FC<NetPayCalculatorProps> = ({
               />
             </div>
 
-            {/* Tax Rate Slider */}
+            {/* Tax Rate Input */}
             <div className="space-y-2">
               <div className="flex justify-between items-center">
                 <Label className="flex items-center gap-1">
@@ -330,11 +338,14 @@ const NetPayCalculator: React.FC<NetPayCalculatorProps> = ({
                 </Label>
                 <span className="text-sm font-medium">{taxRate}%</span>
               </div>
-              <Slider
-                defaultValue={[taxRate]}
+              <Input
+                type="number"
+                min={0}
                 max={50}
-                step={1}
-                onValueChange={handleTaxRateChange}
+                step={0.01}
+                value={taxRate}
+                onChange={e => setTaxRate(Number(e.target.value) || 0)}
+                className="w-24"
               />
               <p className="text-xs text-gray-500">
                 Estimated tax rate based on income bracket. Adjust as needed.
@@ -865,103 +876,97 @@ const NetPayCalculator: React.FC<NetPayCalculatorProps> = ({
                   className="text-right"
                 />
               </div>
-              <div className="space-y-1">
-                <Label htmlFor="paddy-rice" className="text-xs">
-                  Paddy Rice
-                </Label>
-                <Input
-                  id="paddy-rice"
-                  type="number"
-                  value={paddyRice}
-                  onChange={(e) =>
-                    setPaddyRice(parseFloat(e.target.value) || 0)
-                  }
-                  className="text-right"
-                />
-              </div>
-              <div className="space-y-1">
-                <Label htmlFor="broiler-chicken" className="text-xs">
-                  Broiler Chicken
-                </Label>
-                <Input
-                  id="broiler-chicken"
-                  type="number"
-                  value={broilerChicken}
-                  onChange={(e) =>
-                    setBroilerChicken(parseFloat(e.target.value) || 0)
-                  }
-                  className="text-right"
-                />
-              </div>
-              <div className="space-y-1">
-                <Label htmlFor="talong" className="text-xs">
-                  Talong
-                </Label>
-                <Input
-                  id="talong"
-                  type="number"
-                  value={talong}
-                  onChange={(e) => setTalong(parseFloat(e.target.value) || 0)}
-                  className="text-right"
-                />
-              </div>
             </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <div className="space-y-1">
-                <Label htmlFor="okra" className="text-xs">
-                  Okra
-                </Label>
-                <Input
-                  id="okra"
-                  type="number"
-                  value={okra}
-                  onChange={(e) => setOkra(parseFloat(e.target.value) || 0)}
-                  className="text-right"
-                />
+            {/* IGP Section */}
+            <div className="space-y-4 border rounded-md p-4 bg-gray-50">
+              <div className="flex items-center justify-between">
+                <h3 className="text-sm font-medium">IGP Entries</h3>
+                <div className="flex items-center gap-2">
+                  <Input
+                    type="text"
+                    placeholder="IGP Description"
+                    value={newIgpDescription}
+                    onChange={(e) => setNewIgpDescription(e.target.value)}
+                    className="w-48"
+                  />
+                  <Input
+                    type="number"
+                    placeholder="Amount"
+                    value={newIgpAmount || ""}
+                    onChange={(e) => setNewIgpAmount(parseFloat(e.target.value) || 0)}
+                    className="w-32 text-right"
+                  />
+                  <Button
+                    onClick={addIgpEntry}
+                    size="sm"
+                    className="h-8"
+                  >
+                    Add IGP
+                  </Button>
+                </div>
               </div>
-              <div className="space-y-1">
-                <Label htmlFor="batong" className="text-xs">
-                  Batong
-                </Label>
-                <Input
-                  id="batong"
-                  type="number"
-                  value={batong}
-                  onChange={(e) => setBatong(parseFloat(e.target.value) || 0)}
-                  className="text-right"
-                />
-              </div>
-              <div className="space-y-1">
-                <Label htmlFor="sitaw" className="text-xs">
-                  Sitaw
-                </Label>
-                <Input
-                  id="sitaw"
-                  type="number"
-                  value={sitaw}
-                  onChange={(e) => setSitaw(parseFloat(e.target.value) || 0)}
-                  className="text-right"
-                />
-              </div>
-              <div className="space-y-1">
-                <Label htmlFor="sili" className="text-xs">
-                  Sili
-                </Label>
-                <Input
-                  id="sili"
-                  type="number"
-                  value={sili}
-                  onChange={(e) => setSili(parseFloat(e.target.value) || 0)}
-                  className="text-right"
-                />
-              </div>
+
+              {igpEntries.length > 0 && (
+                <div className="overflow-x-auto">
+                  <table className="w-full border-collapse text-sm">
+                    <thead>
+                      <tr className="bg-gray-100">
+                        <th className="border border-gray-300 px-3 py-2 text-left font-medium">
+                          Description
+                        </th>
+                        <th className="border border-gray-300 px-3 py-2 text-right font-medium">
+                          Amount
+                        </th>
+                        <th className="border border-gray-300 px-3 py-2 text-center font-medium">
+                          Action
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {igpEntries.map((entry) => (
+                        <tr key={entry.id}>
+                          <td className="border border-gray-300 px-3 py-2">
+                            {entry.description}
+                          </td>
+                          <td className="border border-gray-300 px-3 py-2 text-right">
+                            ₱{entry.amount.toLocaleString(undefined, {
+                              maximumFractionDigits: 2,
+                            })}
+                          </td>
+                          <td className="border border-gray-300 px-3 py-2 text-center">
+                            <Button
+                              variant="destructive"
+                              size="sm"
+                              onClick={() => removeIgpEntry(entry.id)}
+                              className="h-6"
+                            >
+                              Remove
+                            </Button>
+                          </td>
+                        </tr>
+                      ))}
+                      <tr className="bg-gray-50">
+                        <td className="border border-gray-300 px-3 py-2 font-medium">
+                          Total IGP
+                        </td>
+                        <td className="border border-gray-300 px-3 py-2 text-right font-bold">
+                          ₱{totalIgpAmount.toLocaleString(undefined, {
+                            maximumFractionDigits: 2,
+                          })}
+                        </td>
+                        <td className="border border-gray-300 px-3 py-2"></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              )}
             </div>
 
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-1">
                 <Label htmlFor="water-bill" className="text-xs">
-                  WATER BILL
+                  Water Bill
                 </Label>
                 <Input
                   id="water-bill"
@@ -975,7 +980,7 @@ const NetPayCalculator: React.FC<NetPayCalculatorProps> = ({
               </div>
               <div className="space-y-1">
                 <Label htmlFor="electric-bill" className="text-xs">
-                  ELECT. BILL
+                  Electric Bill
                 </Label>
                 <Input
                   id="electric-bill"

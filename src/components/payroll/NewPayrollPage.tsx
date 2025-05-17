@@ -472,11 +472,11 @@ const NewPayrollPage: React.FC<NewPayrollPageProps> = ({
       />
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
-        {/* Employee Sidebar */}
-        <div className="lg:col-span-3 bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden max-h-[calc(100vh-200px)]">
-          <div className="p-4 border-b border-gray-200">
+        {/* Employee Grid */}
+        <div className="lg:col-span-12 bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
+          <div className="p-4">
             <h2 className="text-lg font-semibold">Employees</h2>
-            <div className="relative mt-2">
+            <div className="relative mt-2 max-w-md">
               <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
               <Input
                 placeholder="Search employees..."
@@ -486,43 +486,44 @@ const NewPayrollPage: React.FC<NewPayrollPageProps> = ({
               />
             </div>
           </div>
-          <ScrollArea className="h-[calc(100vh-280px)]">
-            <div className="p-2">
-              {filteredEmployees.map((employee) => (
-                <div
-                  key={employee.id}
-                  className={`p-3 rounded-md cursor-pointer transition-colors ${selectedEmployee?.id === employee.id ? "bg-primary/10 border-l-4 border-primary" : "hover:bg-gray-50"}`}
-                  onClick={() => handleSelectEmployee(employee)}
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="bg-gray-100 rounded-full p-2">
-                      <User className="h-5 w-5 text-gray-600" />
-                    </div>
-                    <div>
-                      <h3 className="font-medium">
+          <ScrollArea className="h-[200px]">
+            <div className="p-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
+                {filteredEmployees.map((employee) => (
+                  <div
+                    key={employee.id}
+                    className={`p-4 rounded-lg cursor-pointer transition-colors border ${
+                      selectedEmployee?.id === employee.id 
+                        ? "bg-primary/10 border-primary" 
+                        : "border-gray-200 hover:bg-gray-50"
+                    }`}
+                    onClick={() => handleSelectEmployee(employee)}
+                  >
+                    <div className="flex flex-col items-center text-center">
+                      <div className="bg-gray-100 rounded-full p-3 mb-3">
+                        <User className="h-6 w-6 text-gray-600" />
+                      </div>
+                      <h3 className="font-medium text-sm">
                         {employee.firstName} {employee.lastName}
                       </h3>
-                      <p className="text-xs text-gray-500">
+                      <p className="text-xs text-gray-500 mt-1">
                         {employee.department}
                       </p>
                     </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
           </ScrollArea>
         </div>
 
         {/* Main Content */}
-        <div
-          className={`${isPreviewMinimized ? "lg:col-span-9" : "lg:col-span-5"} space-y-4`}
-        >
+        <div className={`${isPreviewMinimized ? "lg:col-span-12" : "lg:col-span-8"} space-y-4`}>
           {selectedEmployee ? (
             <>
               {/* Employee Details Card */}
               <EmployeeDetails
                 employee={selectedEmployee}
-                payPeriod={payPeriod}
                 onFieldChange={handleFieldChange}
               />
 
