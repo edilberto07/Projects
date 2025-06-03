@@ -1,0 +1,23 @@
+To run the server you need to have node.js
+In the cmd, type
+npm install
+npm run dev 
+
+To install in HEROKU:
+
+heroku login
+
+git init
+git add -A
+git status
+git commit -m "Initial Commit"
+
+heroku create bisubas
+
+https://bisubas-111ccfd934c6.herokuapp.com/
+
+git push heroku master
+
+
+To check the status of the server:
+heroku logs --tail --app bisubas
