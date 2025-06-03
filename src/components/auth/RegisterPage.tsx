@@ -3,8 +3,8 @@ import { useNavigate, Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Button } from "../../components/ui/button";
+import { Input } from "../../components/ui/input";
 import {
   Card,
   CardContent,
@@ -12,7 +12,7 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
+} from "../../components/ui/card";
 import {
   Form,
   FormControl,
@@ -20,8 +20,8 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { useAuth } from "@/lib/auth";
+} from "../../components/ui/form";
+import { useAuth } from "../../lib/auth";
 
 const registerSchema = z
   .object({
@@ -46,7 +46,7 @@ type RegisterFormValues = z.infer<typeof registerSchema>;
 
 const RegisterPage: React.FC = () => {
   const navigate = useNavigate();
-  const { register } = useAuth();
+  const { register, loading, error: authError } = useAuth();
   const [error, setError] = useState<string | null>(null);
 
   const form = useForm<RegisterFormValues>({
@@ -68,7 +68,7 @@ const RegisterPage: React.FC = () => {
         state: { message: "Registration successful! Please log in." },
       });
     } catch (err) {
-      setError("Registration failed. This email may already be in use.");
+      setError(err instanceof Error ? err.message : "Registration failed. Please try again.");
       console.error("Registration error:", err);
     }
   };
@@ -92,9 +92,9 @@ const RegisterPage: React.FC = () => {
         <CardContent>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-              {error && (
+              {(error || authError) && (
                 <div className="bg-red-50 text-red-600 p-3 rounded-md text-sm">
-                  {error}
+                  {error || authError}
                 </div>
               )}
               <div className="grid grid-cols-2 gap-4">
@@ -105,7 +105,7 @@ const RegisterPage: React.FC = () => {
                     <FormItem>
                       <FormLabel>First Name</FormLabel>
                       <FormControl>
-                        <Input placeholder="John" {...field} />
+                        <Input placeholder="John" {...field} disabled={loading} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -118,7 +118,7 @@ const RegisterPage: React.FC = () => {
                     <FormItem>
                       <FormLabel>Last Name</FormLabel>
                       <FormControl>
-                        <Input placeholder="Doe" {...field} />
+                        <Input placeholder="Doe" {...field} disabled={loading} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -132,7 +132,7 @@ const RegisterPage: React.FC = () => {
                   <FormItem>
                     <FormLabel>Email</FormLabel>
                     <FormControl>
-                      <Input placeholder="john.doe@university.edu" {...field} />
+                      <Input placeholder="john.doe@university.edu" {...field} disabled={loading} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -145,7 +145,7 @@ const RegisterPage: React.FC = () => {
                   <FormItem>
                     <FormLabel>Password</FormLabel>
                     <FormControl>
-                      <Input type="password" placeholder="••••••" {...field} />
+                      <Input type="password" placeholder="••••••" {...field} disabled={loading} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -158,14 +158,14 @@ const RegisterPage: React.FC = () => {
                   <FormItem>
                     <FormLabel>Confirm Password</FormLabel>
                     <FormControl>
-                      <Input type="password" placeholder="••••••" {...field} />
+                      <Input type="password" placeholder="••••••" {...field} disabled={loading} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
-              <Button type="submit" className="w-full">
-                Register
+              <Button type="submit" className="w-full" disabled={loading}>
+                {loading ? "Registering..." : "Register"}
               </Button>
             </form>
           </Form>

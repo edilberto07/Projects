@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Button } from "../../components/ui/button";
+import { Input } from "../../components/ui/input";
+import { Label } from "../../components/ui/label";
 import {
   Card,
   CardContent,
@@ -13,7 +13,7 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
+} from "../../components/ui/card";
 import {
   Form,
   FormControl,
@@ -21,8 +21,8 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { useAuth } from "@/lib/auth";
+} from "../../components/ui/form";
+import { useAuth } from "../../lib/auth";
 
 const loginSchema = z.object({
   email: z.string().email({ message: "Please enter a valid email address" }),
@@ -37,6 +37,8 @@ const LoginPage: React.FC = () => {
   const navigate = useNavigate();
   const { login } = useAuth();
   const [error, setError] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const submitTimeoutRef = useRef<NodeJS.Timeout>();
 
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
@@ -46,14 +48,43 @@ const LoginPage: React.FC = () => {
     },
   });
 
+  // Cleanup timeout on unmount
+  React.useEffect(() => {
+    return () => {
+      if (submitTimeoutRef.current) {
+        clearTimeout(submitTimeoutRef.current);
+      }
+    };
+  }, []);
+
   const onSubmit = async (data: LoginFormValues) => {
+    if (isSubmitting) return;
+
     try {
+      setIsSubmitting(true);
       setError(null);
+
+      // Clear any existing timeout
+      if (submitTimeoutRef.current) {
+        clearTimeout(submitTimeoutRef.current);
+      }
+
+      // Add a small delay before submitting
+      await new Promise(resolve => {
+        submitTimeoutRef.current = setTimeout(resolve, 500);
+      });
+
       await login(data.email, data.password);
       navigate("/dashboard");
-    } catch (err) {
-      setError("Invalid email or password. Please try again.");
+    } catch (err: any) {
       console.error("Login error:", err);
+      if (err.message === 'Please wait before trying again') {
+        setError('Please wait a moment before trying again');
+      } else {
+        setError(err.message || "Invalid email or password. Please try again.");
+      }
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -93,7 +124,11 @@ const LoginPage: React.FC = () => {
                   <FormItem>
                     <FormLabel>Email</FormLabel>
                     <FormControl>
-                      <Input placeholder="admin@university.edu" {...field} />
+                      <Input 
+                        placeholder="admin@university.edu" 
+                        {...field} 
+                        disabled={isSubmitting}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -106,7 +141,12 @@ const LoginPage: React.FC = () => {
                   <FormItem>
                     <FormLabel>Password</FormLabel>
                     <FormControl>
-                      <Input type="password" placeholder="••••••" {...field} />
+                      <Input 
+                        type="password" 
+                        placeholder="••••••" 
+                        {...field} 
+                        disabled={isSubmitting}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -119,6 +159,7 @@ const LoginPage: React.FC = () => {
                     name="remember-me"
                     type="checkbox"
                     className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-600"
+                    disabled={isSubmitting}
                   />
                   <Label
                     htmlFor="remember-me"
@@ -136,8 +177,12 @@ const LoginPage: React.FC = () => {
                   </a>
                 </div>
               </div>
-              <Button type="submit" className="w-full">
-                Sign in
+              <Button 
+                type="submit" 
+                className="w-full"
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? "Signing in..." : "Sign in"}
               </Button>
             </form>
           </Form>

@@ -1,6 +1,6 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
-import { useAuth } from "@/lib/auth";
+import { useAuth } from "../../lib/auth";
 import {
   Bell,
   Search,
@@ -13,7 +13,7 @@ import {
   Settings,
   LogOut,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Button } from "../ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -21,7 +21,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from "../ui/dropdown-menu";
 
 const Header: React.FC = () => {
   const { user, logout } = useAuth();

@@ -1,83 +1,111 @@
-import { Suspense, lazy } from "react";
-import { useRoutes, Routes, Route } from "react-router-dom";
-import Home from "./components/home";
-import routes from "tempo-routes";
+import React, { Component, ErrorInfo, ReactNode } from "react";
+import { Routes, Route, BrowserRouter } from "react-router-dom";
 import { AuthProvider } from "./lib/auth";
+import { ChatBot } from "./components/chatbot/ChatBot";
+
+// Import components directly instead of lazy loading for now
+import GetStartedPage from "./components/auth/GetStartedPage";
+import LoginPage from "./components/auth/LoginPage";
+import RegisterPage from "./components/auth/RegisterPage";
+import Home from "./components/home";
+import EmployeesPage from "./components/employees/EmployeesPage";
+import PayrollPage from "./components/payroll/PayrollPage";
+import ReportsPage from "./components/reports/ReportsPage";
+import SettingsPage from "./components/settings/SettingsPage";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
 
-// Lazy load route components for better performance
-const EmployeesPage = lazy(
-  () => import("./components/employees/EmployeesPage"),
-);
-const PayrollPage = lazy(() => import("./components/payroll/PayrollPage"));
-const ReportsPage = lazy(() => import("./components/reports/ReportsPage"));
-const SettingsPage = lazy(() => import("./components/settings/SettingsPage"));
-const LoginPage = lazy(() => import("./components/auth/LoginPage"));
-const RegisterPage = lazy(() => import("./components/auth/RegisterPage"));
-const GetStartedPage = lazy(() => import("./components/auth/GetStartedPage"));
+class ErrorBoundary extends Component<{ children: ReactNode }, { hasError: boolean; error: Error | null }> {
+  constructor(props: { children: ReactNode }) {
+    super(props);
+    this.state = { hasError: false, error: null };
+  }
+
+  static getDerivedStateFromError(error: Error) {
+    return { hasError: true, error };
+  }
+
+  componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+    console.error("Error caught by boundary:", error, errorInfo);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="min-h-screen flex items-center justify-center bg-gray-50">
+          <div className="max-w-md w-full p-6 bg-white rounded-lg shadow-lg">
+            <h1 className="text-2xl font-bold text-red-600 mb-4">Something went wrong</h1>
+            <p className="text-gray-600 mb-4">{this.state.error?.message}</p>
+            <button
+              onClick={() => window.location.reload()}
+              className="w-full bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700"
+            >
+              Reload Page
+            </button>
+          </div>
+        </div>
+      );
+    }
+
+    return this.props.children;
+  }
+}
 
 function App() {
   return (
-    <AuthProvider>
-      <Suspense
-        fallback={
-          <div className="flex items-center justify-center h-screen">
-            Loading...
+    <ErrorBoundary>
+      <AuthProvider>
+        <BrowserRouter>
+          <div className="min-h-screen bg-gray-50">
+            <Routes>
+              <Route path="/" element={<GetStartedPage />} />
+              <Route path="/login" element={<LoginPage />} />
+              <Route path="/register" element={<RegisterPage />} />
+              <Route
+                path="/dashboard"
+                element={
+                  <ProtectedRoute>
+                    <Home />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/employees"
+                element={
+                  <ProtectedRoute>
+                    <EmployeesPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/payroll"
+                element={
+                  <ProtectedRoute>
+                    <PayrollPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/reports"
+                element={
+                  <ProtectedRoute>
+                    <ReportsPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/settings"
+                element={
+                  <ProtectedRoute>
+                    <SettingsPage />
+                  </ProtectedRoute>
+                }
+              />
+            </Routes>
+            <ChatBot />
           </div>
-        }
-      >
-        {import.meta.env.VITE_TEMPO === "true" && useRoutes(routes)}
-        <Routes>
-          <Route path="/" element={<GetStartedPage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
-          <Route
-            path="/dashboard"
-            element={
-              <ProtectedRoute>
-                <Home />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/employees"
-            element={
-              <ProtectedRoute>
-                <EmployeesPage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/payroll"
-            element={
-              <ProtectedRoute>
-                <PayrollPage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/reports"
-            element={
-              <ProtectedRoute>
-                <ReportsPage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/settings"
-            element={
-              <ProtectedRoute>
-                <SettingsPage />
-              </ProtectedRoute>
-            }
-          />
-          {/* Add the tempo route before any catch-all route */}
-          {import.meta.env.VITE_TEMPO === "true" && (
-            <Route path="/tempobook/*" />
-          )}
-        </Routes>
-      </Suspense>
-    </AuthProvider>
+        </BrowserRouter>
+      </AuthProvider>
+    </ErrorBoundary>
   );
 }
 

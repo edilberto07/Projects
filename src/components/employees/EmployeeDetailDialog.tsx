@@ -461,13 +461,8 @@ const EmployeeDetailDialog: React.FC<EmployeeDetailDialogProps> = ({
                           <Select
                             onValueChange={field.onChange}
                             defaultValue={field.value}
-                            disabled={!employmentEditable}
                           >
-                            <SelectTrigger
-                              className={
-                                !employmentEditable ? "bg-gray-50" : ""
-                              }
-                            >
+                            <SelectTrigger>
                               <SelectValue placeholder="Select type" />
                             </SelectTrigger>
                             <SelectContent>
@@ -481,7 +476,6 @@ const EmployeeDetailDialog: React.FC<EmployeeDetailDialogProps> = ({
                               <SelectItem value="Temporary">
                                 Temporary
                               </SelectItem>
-                              <SelectItem value="Adjunct">Adjunct</SelectItem>
                             </SelectContent>
                           </Select>
                         </FormControl>
