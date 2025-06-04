@@ -16,13 +16,4 @@ class User(Base):
 
     messages = relationship("ChatMessage", back_populates="user")
 
-class ChatMessage(Base):
-    __tablename__ = "chat_messages"
-
-    id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(Integer, ForeignKey("users.id"))
-    content = Column(Text)
-    sender = Column(String)  # 'user' or 'bot'
-    timestamp = Column(DateTime)
-
-    user = relationship("User", back_populates="messages") 
+# Remove ChatMessage model and its relationship 

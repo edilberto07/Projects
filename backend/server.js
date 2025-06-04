@@ -75,7 +75,6 @@ const employeeRoutes = require('./routes/employee.routes');
 const payrollRoutes = require('./routes/payroll.routes');
 const deductionRoutes = require('./routes/deductions.routes');
 const reportRoutes = require('./routes/reports.routes');
-const chatbotRoutes = require('./routes/chatbot.routes');
 const { router: auditRoutes, initializeWebSocket } = require('./routes/audit.routes');
 
 // File Upload configuration
@@ -89,7 +88,6 @@ app.use("/api/employees", employeeRoutes);
 app.use("/api/payroll", payrollRoutes);
 app.use("/api/deductions", deductionRoutes);
 app.use("/api/reports", reportRoutes);
-app.use("/api/chatbot", chatbotRoutes);
 app.use("/api", auditRoutes); // This includes both /audit-logs and /notifications endpoints
 
 // Welcome route

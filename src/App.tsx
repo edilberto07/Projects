@@ -1,8 +1,6 @@
 import React, { Component, ErrorInfo, ReactNode } from "react";
 import { Routes, Route, BrowserRouter } from "react-router-dom";
 import { AuthProvider } from "./lib/auth";
-import { ChatBot } from "./components/chatbot/ChatBot";
-
 // Import components directly instead of lazy loading for now
 import GetStartedPage from "./components/auth/GetStartedPage";
 import LoginPage from "./components/auth/LoginPage";
@@ -101,7 +99,6 @@ function App() {
                 }
               />
             </Routes>
-            <ChatBot />
           </div>
         </BrowserRouter>
       </AuthProvider>

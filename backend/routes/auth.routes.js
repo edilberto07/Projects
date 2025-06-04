@@ -109,6 +109,23 @@ router.post('/register', async (req, res) => {
         const hashedPassword = await bcrypt.hash(password, 10);
         console.log('Hashed password:', hashedPassword);
 
+        // First check if user exists
+        const existingUser = await db.sequelize.query(
+            'SELECT 1 FROM payroll_users WHERE email = ?',
+            {
+                replacements: [email],
+                type: db.sequelize.QueryTypes.SELECT
+            }
+        );
+
+        if (existingUser && existingUser.length > 0) {
+            return res.status(400).json({
+                error: true,
+                message: 'Email already exists'
+            });
+        }
+
+        // Proceed with registration
         const result = await db.sequelize.query(
             'CALL sp_auth_register(?, ?, ?, ?)',
             {
@@ -116,7 +133,6 @@ router.post('/register', async (req, res) => {
                 type: db.sequelize.QueryTypes.SELECT
             }
         );
-        console.log('Register query result:', result);
 
         if (!result || !result[0] || result[0].length === 0) {
             return res.status(400).json({ 
@@ -128,21 +144,48 @@ router.post('/register', async (req, res) => {
         const user = result[0][0];
         console.log('Registered user:', user);
 
+        // Generate token for immediate login
+        const token = jwt.sign(
+            { id: user.id, email: user.email },
+            JWT_SECRET,
+            { expiresIn: '24h' }
+        );
+
         res.status(201).json({
             error: false,
             message: 'User registered successfully',
             data: {
-                id: user.id,
-                email: user.email,
-                firstName: user.firstName,
-                lastName: user.lastName
+                token,
+                user: {
+                    id: user.id,
+                    email: user.email,
+                    firstName: user.firstName,
+                    lastName: user.lastName
+                }
             }
         });
     } catch (err) {
         console.error('Registration error:', err);
+        
+        // Check for specific error types
+        if (err.name === 'SequelizeConnectionError') {
+            return res.status(503).json({
+                error: true,
+                message: 'Database connection error. Please try again.'
+            });
+        }
+        
+        if (err.name === 'SequelizeUniqueConstraintError') {
+            return res.status(400).json({
+                error: true,
+                message: 'Email already exists'
+            });
+        }
+
         res.status(500).json({ 
             error: true, 
-            message: 'Internal server error during registration' 
+            message: 'Internal server error during registration',
+            details: process.env.NODE_ENV === 'development' ? err.message : undefined
         });
     }
 });

@@ -1,6 +1,6 @@
 {
     "baseurl": "http://localhost:5001/",
-    "Connection" : {
+    "Connection": {
         "dbConfig": {
             "driver": "mysql",
             "user": "bisublar_hris",

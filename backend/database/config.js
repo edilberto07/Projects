@@ -9,17 +9,35 @@ const sequelize = new Sequelize(
     dbConfig.password, {
     host: dbConfig.host,
     dialect: dbConfig.driver,
-    pool: { max: 5, min: 0, acquire: 30000, idle: 10000 },
+    pool: { 
+        max: 5, 
+        min: 0, 
+        acquire: 60000,  // Increased from 30000
+        idle: 10000 
+    },
     timezone: dbConfig.timezone,
     dialectOptions: {
-        multipleStatements: true
+        multipleStatements: true,
+        connectTimeout: 60000,  // Added connection timeout
+        waitForConnections: true,
+        connectionLimit: 10,
+        queueLimit: 0
+    },
+    retry: {
+        max: 3,  // Maximum retry attempts
+        match: [/Deadlock/i, /ETIMEDOUT/]  // Retry on these errors
     }
 });
-sequelize.authenticate().then(res => {
-    console.log(`Connection established at ${dbConfig.host}`);
-}).catch(err => {
-    console.log(`Error: ${err}`);
-});
+
+// Add connection error handling
+sequelize.authenticate()
+    .then(() => {
+        console.log(`Connection established at ${dbConfig.host}`);
+    })
+    .catch(err => {
+        console.error('Unable to connect to the database:', err);
+    });
+
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 db.MultiQueryResult = (arr) => {
