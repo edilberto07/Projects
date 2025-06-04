@@ -5,6 +5,7 @@ import { ScrollArea } from "../ui/scroll-area";
 import { Input } from "../ui/input";
 import { Separator } from "../ui/separator";
 import { MessageCircle, X, RefreshCw, Send, Bot, User } from "lucide-react";
+import axios from 'axios';
 
 interface Message {
   id: string;
@@ -47,20 +48,33 @@ const ChatbotSidebar: React.FC<ChatbotSidebarProps> = ({
     setInputValue("");
     setIsLoading(true);
 
-    // Simulate bot response
-    setTimeout(() => {
+    try {
+      // Send message to the Flask backend
+      const response = await axios.post("http://localhost:5000/chat", { // Updated URL
+        message: inputValue, // Send only the message
+      });
+
       const botMessage: Message = {
-        id: (Date.now() + 1).toString(),
-        text:
-          "I understand you're asking about: \"" +
-          inputValue +
-          '". Let me help you with that. This is a demo response - in a real implementation, this would connect to an AI service.',
+        id: Date.now().toString(),
+        text: response.data.response, // Get response text from response.data.response
+        sender: "bot", // Flask app does not return sender, assume 'bot'
+        timestamp: new Date(), // Generate timestamp on the frontend
+      };
+
+      setMessages((prev) => [...prev, botMessage]);
+
+    } catch (error) {
+      console.error("Error sending message to backend:", error);
+      const errorMessage: Message = {
+        id: Date.now().toString(),
+        text: "Sorry, I'm having trouble connecting to the payroll assistant right now.",
         sender: "bot",
         timestamp: new Date(),
       };
-      setMessages((prev) => [...prev, botMessage]);
+      setMessages((prev) => [...prev, errorMessage]);
+    } finally {
       setIsLoading(false);
-    }, 1000);
+    }
   };
 
   const handleRefresh = () => {

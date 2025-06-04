@@ -1,0 +1,395 @@
+{
+  "intents": [
+    {
+      "tag": "greeting",
+      "patterns": [
+        "Hi",
+        "Hello",
+        "Hey",
+        "Good morning",
+        "Good afternoon",
+        "Good evening",
+        "How are you",
+        "What's up",
+        "Greetings",
+        "ello",
+        "hey there",
+        "morning",
+        "afternoon",
+        "evening",
+        "hi there",
+        "how r u"
+      ],
+      "responses": [
+        "Hello! I'm your payroll assistant. How can I help you with payroll today?",
+        "Hi there! What can I assist you with regarding payroll?",
+        "Greetings! I'm here to help with your payroll questions.",
+        "Hey! Ask me anything about your pay."
+      ]
+    },
+    {
+      "tag": "goodbye",
+      "patterns": [
+        "Bye",
+        "See you later",
+        "Goodbye",
+        "Take care",
+        "Until next time",
+        "I'm leaving",
+        "Have a good day",
+        "bai",
+        "cya",
+        "later",
+        "im off",
+        "gotta go",
+        "bye bye"
+      ],
+      "responses": [
+        "Goodbye! Have a great day!",
+        "See you later! Feel free to ask if you have more payroll questions.",
+        "Take care! I'm here if you need anything else.",
+        "Bye! Happy to help."
+      ]
+    },
+    {
+      "tag": "payslip",
+      "patterns": [
+        "Where can I find my payslip",
+        "How to get my payslip",
+        "Download payslip",
+        "Latest payslip",
+        "View payslip",
+        "payslip",
+        "pay slip",
+        "pauslip",
+        "mypayslip",
+        "download pay slip",
+        "recent payslip",
+        "how to see pay slip",
+        "get my paystub",
+        "paystub"
+      ],
+      "responses": [
+        "You can typically find your payslip in the employee portal under the 'Payroll' or 'Documents' section.",
+        "Your latest payslip should be available for download on the HR or payroll system.",
+        "To access your payslip, please log in to the employee self-service portal."
+      ]
+    },
+    {
+      "tag": "net_pay",
+      "patterns": [
+        "What is my net pay",
+        "How is net pay calculated",
+        "Net amount",
+        "Take home pay",
+        "My pay",
+        "netpay",
+        "how much i get",
+        "pay after tax",
+        "takehome",
+        "net amount on payslip",
+        "final pay amount"
+      ],
+      "responses": [
+        "Net pay is your gross pay minus all deductions like taxes, benefits, and other contributions.",
+        "Your net pay is the amount you receive after all applicable deductions are taken from your gross pay.",
+        "Net pay is calculated by subtracting taxes, benefits, and other deductions from your total earnings (gross pay)."
+      ]
+    },
+    {
+      "tag": "gross_pay",
+      "patterns": [
+        "What is my gross pay",
+        "Gross amount",
+        "Total earnings",
+        "Pay before tax",
+        "gros pay",
+        "total pay",
+        "earnings before deductions",
+        "pay before tax and deductions",
+        "my total income"
+      ],
+      "responses": [
+        "Gross pay is your total salary or wages before any deductions are made.",
+        "Your gross pay is the sum of your regular pay, overtime, bonuses, and other compensation before taxes and deductions.",
+        "Gross pay is the amount you earn before deductions for taxes, benefits, etc."
+      ]
+    },
+    {
+      "tag": "deductions",
+      "patterns": [
+        "What are the deductions on my payslip",
+        "Explain deductions",
+        "Why are deductions taken",
+        "List of deductions",
+        "My deductions",
+        "what is deductions",
+        "why deductions",
+        "what got taken out",
+        "stuff taken from pay",
+        "deductions explained",
+        "what are these deductions"
+      ],
+      "responses": [
+        "Common deductions include federal and state income tax, Social Security tax, Medicare tax, health insurance premiums, and retirement contributions.",
+        "Deductions are amounts withheld from your gross pay for taxes, benefits, or other purposes.",
+        "The deductions on your payslip typically include mandatory taxes and voluntary contributions like health insurance or retirement plans."
+      ]
+    },
+    {
+      "tag": "taxes",
+      "patterns": [
+        "How much tax is deducted",
+        "Explain taxes",
+        "Income tax",
+        "Federal tax",
+        "State tax",
+        "Payroll taxes",
+        "tax taken",
+        "pay taxes",
+        "fedral tax",
+        "state tax",
+        "taxes on pay",
+        "how much income tax",
+        "payroll tax breakdown"
+      ],
+      "responses": [
+        "The amount of tax deducted depends on your income, tax withholdings (W-4 form), and applicable tax laws.",
+        "Payroll taxes include federal income tax, Social Security, and Medicare, and potentially state and local taxes.",
+        "Taxes are mandatory deductions based on your earnings and tax information."
+      ]
+    },
+    {
+      "tag": "benefits",
+      "patterns": [
+        "What benefits are deducted",
+        "Explain benefits",
+        "Health insurance deduction",
+        "Dental deduction",
+        "Vision deduction",
+        "Retirement contribution",
+        "401k deduction",
+        "benefits taken",
+        "health insurence",
+        "dentl",
+        "vision",
+        "retire",
+        "401 k",
+        "medical deduction",
+        "insurance costs"
+      ],
+      "responses": [
+        "Benefit deductions typically cover health insurance, dental, vision, and retirement plan contributions like 401(k)s.",
+        "Deductions for benefits are based on your enrollment choices for company-sponsored plans.",
+        "Check your benefits enrollment documents to understand your benefit deductions."
+      ]
+    },
+    {
+      "tag": "pay_date",
+      "patterns": [
+        "When do I get paid",
+        "Payday",
+        "Next payment date",
+        "Payment schedule",
+        "When is payday",
+        "wen is payday",
+        "next pay",
+        "pay date",
+        "when get paid",
+        "when is next payroll",
+        "get paid date"
+      ],
+      "responses": [
+        "Payday is scheduled for [Insert Pay Date Here]. You can find the full payment schedule on the HR portal.",
+        "Your next payment will be on [Insert Pay Date Here].",
+        "Payroll is processed on a [Weekly/Bi-weekly/Monthly] basis. The next payment date is [Insert Pay Date Here]."
+      ]
+    },
+    {
+      "tag": "direct_deposit",
+      "patterns": [
+        "How to set up direct deposit",
+        "Change bank account for payroll",
+        "Update direct deposit",
+        "Direct deposit form",
+        "setup direct deposit",
+        "change bank",
+        "update bank details",
+        "bank for pay",
+        "add bank account",
+        "payroll bank info"
+      ],
+      "responses": [
+        "You can set up or update your direct deposit information through the employee self-service portal or by submitting a direct deposit form to HR.",
+        "To change your direct deposit details, please log in to the payroll system and follow the instructions in the banking section.",
+        "Contact HR or payroll administration for assistance with setting up or changing direct deposit."
+      ]
+    },
+    {
+      "tag": "w2_form",
+      "patterns": [
+        "Where is my W2 form",
+        "Get W2",
+        "Download W2",
+        "W2 copy",
+        "Tax form W2",
+        "where w2",
+        "my w2",
+        "get w2 form",
+        "tax form",
+        "need my w2",
+        "w2 document"
+      ],
+      "responses": [
+        "Your W-2 form is usually available electronically through the employee portal or sent by mail by January 31st each year.",
+        "You can download your W-2 form from the payroll system or contact HR if you prefer a physical copy.",
+        "W-2 forms are issued annually for tax purposes and contain your wage and tax information."
+      ]
+    },
+    {
+      "tag": "pto",
+      "patterns": [
+        "How much PTO do I have",
+        "Check PTO balance",
+        "Paid time off",
+        "Vacation days",
+        "Sick leave balance",
+        "my pto",
+        "pto balance",
+        "vacation balance",
+        "sick days left",
+        "how many pto",
+        "check my leave",
+        "available pto"
+      ],
+      "responses": [
+        "You can check your current PTO balance in the employee portal, usually in the 'Time Off' or 'Leave' section.",
+        "Your paid time off balance is updated with each pay period. You can view it online.",
+        "To see your available vacation and sick leave, please access the HR system."
+      ]
+    },
+    {
+      "tag": "bonus",
+      "patterns": [
+        "When will I get my bonus",
+        "Bonus payment date",
+        "Is my bonus on this payslip",
+        "Bonus amount",
+        "bonus pay",
+        "when bonus",
+        "my bonus",
+        "annual bonus"
+      ],
+      "responses": [
+        "Bonus payment dates vary. Please check with your manager or HR for information on your bonus payout.",
+        "If your bonus was processed with this payroll, it will be reflected on your payslip.",
+        "For details on bonus eligibility and payment, please refer to company policy or contact HR."
+      ]
+    },
+    {
+      "tag": "overtime",
+      "patterns": [
+        "How is overtime calculated",
+        "Overtime pay rate",
+        "When do I get overtime",
+        "Overtime hours",
+        "ot calculation",
+        "overtime rate",
+        "paid overtime",
+        "working extra hours"
+      ],
+      "responses": [
+        "Overtime is typically calculated at 1.5 times your regular hourly rate for hours worked over [usually 40] in a workweek.",
+        "Overtime pay calculation follows company policy and labor laws. Refer to your employee handbook or contact payroll for specifics.",
+        "Ensure your overtime hours are correctly reported and approved for proper payment."
+      ]
+    },
+    {
+      "tag": "expenses",
+      "patterns": [
+        "How do I submit expenses",
+        "Expense reimbursement",
+        "When will I get reimbursed for expenses",
+        "Expense policy",
+        "submit reciepts",
+        "get money back for expenses",
+        "expense claim",
+        "reimbursement status"
+      ],
+      "responses": [
+        "Expense reimbursement procedures are usually outlined in the company's expense policy. You can typically submit expenses through a specific system or form.",
+        "To get reimbursed for business expenses, please submit a detailed expense report with receipts.",
+        "Contact the finance or accounting department for questions about expense reimbursement."
+      ]
+    },
+    {
+      "tag": "payslip_codes",
+      "patterns": [
+        "What do the codes on my payslip mean",
+        "Explain payslip codes",
+        "Codes on paystub",
+        "Understanding payslip abbreviations",
+        "payslip code meaning",
+        "what is this code",
+        "abbreviations on payslip"
+      ],
+      "responses": [
+        "Payslip codes are abbreviations used to represent different types of earnings, deductions, or taxes. A guide to these codes should be available on the payroll system or from HR.",
+        "If you see a code on your payslip you don't understand, please refer to the payroll code legend or contact the payroll department for clarification.",
+        "Each code on your payslip corresponds to a specific payroll item. A comprehensive list should be provided."
+      ]
+    },
+    {
+      "tag": "contact_payroll",
+      "patterns": [
+        "How to contact payroll",
+        "Payroll department contact",
+        "Email payroll",
+        "Call payroll",
+        "Payroll phone number",
+        "contact payroll",
+        "get in touch with payroll",
+        "payroll email",
+        "payroll number"
+      ],
+      "responses": [
+        "You can contact the payroll department by [Provide Contact Method, e.g., email address, phone number, internal ticketing system].",
+        "For specific payroll inquiries, please reach out to the payroll administration team.",
+        "The contact information for the payroll department should be available on the company's intranet or HR resources page."
+      ]
+    },
+    {
+      "tag": "w4_update",
+      "patterns": [
+        "How to update my W-4",
+        "Change tax withholdings",
+        "Adjust W-4 allowances",
+        "Update tax form",
+        "change w4",
+        "update w4",
+        "tax withholding change",
+        "adjust allowances"
+      ],
+      "responses": [
+        "You can update your W-4 form through the employee self-service portal. Changes will take effect in the next payroll cycle.",
+        "To change your tax withholdings, access the tax information section in the payroll system and submit a new W-4.",
+        "Consult with a tax professional if you have questions about how to fill out your W-4 form."
+      ]
+    },
+    {
+      "tag": "explain_payroll",
+      "patterns": [
+        "what is payroll",
+        "tell me about payroll",
+        "explain payroll",
+        "payroll definition",
+        "what does payroll mean"
+      ],
+      "responses": [
+        "Payroll refers to the process of paying employees, including calculating wages, salaries, bonuses, and deductions, and distributing net pay.",
+        "Payroll involves managing employee compensation, withholding taxes and other deductions, and complying with employment laws and regulations.",
+        "In simple terms, payroll is how employees get paid by a company."
+      ]
+    }
+  ]
+}
